@@ -1,16 +1,17 @@
 package org.usfirst.frc.team3729.robot.commands;
 
+import com.ctre.*;
 import edu.wpi.first.wpilibj.Talon;
 
 public class robotDrive {
-	Talon RightMotor1, LeftMotor1, RightMotor2, LeftMotor2;
+	CANTalon RightMotor1, LeftMotor1, RightMotor2, LeftMotor2;
 	XboxControler _xbox;
 
 	public robotDrive(XboxControler xbox) {
-		RightMotor1 = new Talon(1);
-		RightMotor2 = new Talon(0);
-		LeftMotor1 = new Talon(2);
-		LeftMotor2 = new Talon(3);
+		RightMotor1 = new CANTalon(1);
+		RightMotor2 = new CANTalon(0);
+		LeftMotor1 = new CANTalon(2);
+		LeftMotor2 = new CANTalon(3);
 		this._xbox = xbox;
 	}
 
@@ -87,8 +88,7 @@ public class robotDrive {
 		// System.out.println(leftMotorInput + "left");
 		// System.out.println(rightMotorInput + "right");
 	}
-	
-	
+
 	public void mechenumDrive() {
 		boolean leftInput = _xbox.GetLeftBumper();
 		boolean rightInput = _xbox.GetRightBumper();
