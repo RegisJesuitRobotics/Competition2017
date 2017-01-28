@@ -3,6 +3,7 @@ package org.usfirst.frc.team3729.robot;
 
 import org.usfirst.frc.team3729.robot.commands.XboxControler;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
+import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -20,6 +21,7 @@ public class Robot extends IterativeRobot {
 	// SendableChooser chooser;
 	robotDrive drive;
 	XboxControler xbox;
+	modularPeripheries periphery;
 	// USBCamera cam;
 
 	/**
@@ -34,6 +36,7 @@ public class Robot extends IterativeRobot {
 		// SmartDashboard.putData("Auto choices", chooser);
 		xbox = new XboxControler(0);
 		drive = new robotDrive(xbox);
+		periphery = new modularPeripheries(xbox);
 		// cam = new USBCamera();
 
 	}
@@ -70,7 +73,7 @@ public class Robot extends IterativeRobot {
 		// default:
 		// Talon RightMotor, LeftMotor;
 		//
-		//RightMotor = new Talon(1);
+		// RightMotor = new Talon(1);
 		// LeftMotor = new Talon(2);
 		//
 		// RightMotor.set(.5);
@@ -84,9 +87,18 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-
+		// DRIVING DOODLE
 		drive.arcadeDrive();
 		drive.mechenumDrive();
+
+		// EATING DOODLE
+		// periphery.consciousEating();
+		// periphery.mindlessEating();
+		periphery.onOffEating();
+
+		// SHOOTING DOODLE
+		periphery.shootButton();
+		// SEEING DOODLE
 
 	}
 

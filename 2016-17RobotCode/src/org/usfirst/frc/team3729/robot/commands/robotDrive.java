@@ -89,12 +89,6 @@ public class robotDrive {
 	}
 	
 	
-	
-	
-	
-	
-	
-
 	public void mechenumDrive() {
 		boolean leftInput = _xbox.GetLeftBumper();
 		boolean rightInput = _xbox.GetRightBumper();
