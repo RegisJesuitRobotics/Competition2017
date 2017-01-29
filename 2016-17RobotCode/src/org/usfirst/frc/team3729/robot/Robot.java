@@ -4,6 +4,7 @@ package org.usfirst.frc.team3729.robot;
 import org.usfirst.frc.team3729.robot.commands.XboxControler;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
+import edu.wpi.first.wpilibj.AnalogGyro;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -23,6 +24,7 @@ public class Robot extends IterativeRobot {
 	robotDrive drive;
 	XboxControler xbox;
 	modularPeripheries periphery;
+	AnalogGyro gyro;
 	// USBCamera cam;
 
 	/**
@@ -38,8 +40,12 @@ public class Robot extends IterativeRobot {
 		xbox = new XboxControler(0);
 		drive = new robotDrive(xbox);
 		periphery = new modularPeripheries(xbox);
+		gyro = new AnalogGyro(0);
 		// cam = new USBCamera();
 
+		gyro.initGyro();
+		gyro.calibrate();
+		gyro.reset();
 	}
 
 	/**
@@ -59,6 +65,9 @@ public class Robot extends IterativeRobot {
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
 		// System.out.println("Auto selected: " + autoSelected);
+		gyro.initGyro();
+		gyro.calibrate();
+		gyro.reset();
 	}
 
 	/**
@@ -66,6 +75,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		System.out.println("gyro start heading:" + gyro.getAngle());
+		gyro.reset();
+		System.out.println("gyro after reset:" + gyro.getAngle());
 		// switch (autoSelected) {
 		// case customAuto:
 		// Put custom auto code here
@@ -89,6 +101,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		// DRIVING DOODLE
+	
+		
 		drive.arcadeDrive();
 		drive.mechenumDrive();
 
@@ -97,6 +111,10 @@ public class Robot extends IterativeRobot {
 		// periphery.mindlessEating();
 		periphery.onOffEating();
 
+		//LOADING DOODLE
+		periphery.conscousLoading();
+		
+		
 		// SHOOTING DOODLE
 		periphery.shootButton();
 		// SEEING DOODLE

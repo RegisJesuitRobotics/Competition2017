@@ -1,11 +1,20 @@
 package org.usfirst.frc.team3729.robot.commands;
 
 import com.ctre.*;
+
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Talon;
 
 public class robotDrive {
 	CANTalon RightMotor1, LeftMotor1, RightMotor2, LeftMotor2;
 	XboxControler _xbox;
+	AnalogGyro gyro;
+	boolean isRight;
+	double motorLimiterRatioinital = 0.8;
+	double motorLimiterRatio = motorLimiterRatioinital;
+	double deadZone = 0.2;
+	double leftMotorInput = 1;
+	double rightMotorInput = 1;
 
 	public robotDrive(XboxControler xbox) {
 		RightMotor1 = new CANTalon(1);
@@ -13,6 +22,7 @@ public class robotDrive {
 		LeftMotor1 = new CANTalon(2);
 		LeftMotor2 = new CANTalon(3);
 		this._xbox = xbox;
+
 	}
 
 	public void arcadeDrive() {
@@ -89,17 +99,13 @@ public class robotDrive {
 		// System.out.println(rightMotorInput + "right");
 	}
 
-	public void mechenumDrive() {
-		boolean leftInput = _xbox.GetLeftBumper();
-		boolean rightInput = _xbox.GetRightBumper();
+	public void mechenumDrive(double currentHeading) {
+		boolean leftBumper = _xbox.GetLeftBumper();
+		boolean rightBumper = _xbox.GetRightBumper();
+		double angle;
 
 		// Maybe lower this
 		double motorLimiterRatioinital = 0.8;
-
-		double motorLimiterRatio = motorLimiterRatioinital;
-		double deadZone = 0.2;
-		double leftMotorInput = 1;
-		double rightMotorInput = 1;
 
 		// speed button
 		if (_xbox.GetRightTrigger() > deadZone) {
@@ -108,19 +114,71 @@ public class robotDrive {
 			motorLimiterRatio = motorLimiterRatioinital;
 		}
 
-		if (leftInput == true) {
-			RightMotor1.set(rightMotorInput * motorLimiterRatio);
-			LeftMotor1.set(leftMotorInput * motorLimiterRatio);
-			RightMotor2.set(-rightMotorInput * motorLimiterRatio);
-			LeftMotor2.set(-leftMotorInput * motorLimiterRatio);
+		if (leftBumper == true) {
+			currentHeading = gyro.getAngle();
+			isRight = false;
+			strafeStraight(1, currentHeading, isRight);
 
-		} else if (rightInput == true) {
-
-			RightMotor1.set(-rightMotorInput * motorLimiterRatio);
-			LeftMotor1.set(-leftMotorInput * motorLimiterRatio);
-			RightMotor2.set(rightMotorInput * motorLimiterRatio);
-			LeftMotor2.set(leftMotorInput * motorLimiterRatio);
+		} else if (rightBumper == true) {
+			currentHeading = gyro.getAngle();
+			isRight = true;
+			strafeStraight(1, currentHeading, isRight);
 		}
 
+	}
+
+	private void strafeStraight(double speed, double currentHeading, boolean isRight) {
+		double direction;
+		double angle = gyro.getAngle();
+		if (isRight == true) {
+			direction = 1;
+		} else {
+			direction = -1;
+		}
+
+		if (angle >= currentHeading + .05) {
+			RightMotor1.set(-rightMotorInput * motorLimiterRatio * direction);
+			LeftMotor1.set(-leftMotorInput * motorLimiterRatio * .75 * direction);
+			RightMotor2.set(rightMotorInput * motorLimiterRatio * direction);
+			LeftMotor2.set(leftMotorInput * motorLimiterRatio * .75 * direction);
+			System.out.println("right");
+		} else if (angle <= currentHeading - .05) {
+			System.out.println("left");
+			RightMotor1.set(-rightMotorInput * motorLimiterRatio * .75 * direction);
+			LeftMotor1.set(-leftMotorInput * motorLimiterRatio * direction);
+			RightMotor2.set(rightMotorInput * motorLimiterRatio * .75 * direction);
+			LeftMotor2.set(leftMotorInput * motorLimiterRatio * direction);
+		} else {
+			System.out.println("straight");
+			RightMotor1.set(-rightMotorInput * motorLimiterRatio * direction);
+			LeftMotor1.set(-leftMotorInput * motorLimiterRatio * direction);
+			RightMotor2.set(rightMotorInput * motorLimiterRatio * direction);
+			LeftMotor2.set(leftMotorInput * motorLimiterRatio * direction);
+		}
+	}
+
+	private void driveStraight(double speed, double currentHeading) {
+
+		double angle = gyro.getAngle();
+
+		if (angle >= currentHeading + .05) {
+			LeftMotor1.set(speed * .75);
+			LeftMotor2.set(speed * .75);
+			RightMotor1.set(-speed);
+			RightMotor2.set(-speed);
+			System.out.println("right");
+		} else if (angle <= currentHeading - .05) {
+			System.out.println("left");
+			LeftMotor1.set(speed);
+			LeftMotor2.set(speed);
+			RightMotor1.set(-speed * .75);
+			RightMotor2.set(-speed * .75);
+		} else {
+			System.out.println("straight");
+			LeftMotor1.set(speed);
+			LeftMotor2.set(speed);
+			RightMotor1.set(-speed);
+			RightMotor2.set(-speed);
+		}
 	}
 }

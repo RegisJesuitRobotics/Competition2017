@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.*;
 
 public class modularPeripheries {
-	Relay EatMotor1, EatMotor2, LoadMotor;
-	CANTalon ShootyMotor1, ShootyMotor2;
+	Relay EatMotor1, EatMotor2;
+	CANTalon ShootyMotor1, ShootyMotor2, LoadMotor;
 	XboxControler _xbox;
 
 	public modularPeripheries(XboxControler xbox) {
 		EatMotor1 = new Relay(5);
 		EatMotor2 = new Relay(6);
-		LoadMotor = new Relay (9);
+		LoadMotor = new CANTalon(9);
 		ShootyMotor1 = new CANTalon(7);
 		ShootyMotor2 = new CANTalon(8);
 		this._xbox = xbox;
@@ -42,7 +42,7 @@ public class modularPeripheries {
 		if (_xbox.GetY() == true && isRunning == true) {
 			isRunning = false;
 		}
-		if (_xbox.GetY() == true && isRunning == false) {
+		if (_xbox.GetA() == true && isRunning == false) {
 			isRunning = true;
 		}
 		// The motor setting thing
@@ -55,34 +55,26 @@ public class modularPeripheries {
 			EatMotor2.set(Relay.Value.kOff);
 		}
 	}
-	
-	
-	
-	//LOADING DOODLES
-		public void onOffLoading() {
-			boolean isRunning = true;
-			if (_xbox.GetX() == true && isRunning == true) {
-				isRunning = false;
-			}
-			if (_xbox.GetX() == true && isRunning == false) {
-				isRunning = true;
-			}
-			if (isRunning == true) {
-				LoadMotor.set(Relay.Value.kOn);
-			} else if (isRunning == false) {
-				LoadMotor.set(Relay.Value.kOff);
-			}
-		}
-		
-		public void conscousLoading(){
-			if(_xbox.GetX() == true){
-				LoadMotor.set(Relay.Value.kOn);
-			} else {
-				LoadMotor.set(Relay.Value.kOff);
-			}
-		}
 
-	
+	// LOADING DOODLES
+	// Make a timer so the motor goes 360 deg when you hit B
+	public void conscousLoading() {
+		if (_xbox.GetB() == true) {
+
+			Thread thread2 = new Thread() {
+				public void run() {
+					int timer = 0;
+					while (timer < 100) {
+						LoadMotor.set(0.5);
+						timer++;
+						Timer.delay(1);
+					}
+				}
+			};
+
+		}
+	}
+
 	// SHOOTING DOODLES
 	public void shootButton() {
 		if (_xbox.GetA() == true) {
