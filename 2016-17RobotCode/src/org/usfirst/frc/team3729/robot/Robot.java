@@ -107,16 +107,14 @@ public class Robot extends IterativeRobot {
 		drive.mechenumDrive();
 
 		// EATING DOODLE
-		// periphery.consciousEating();
-		// periphery.mindlessEating();
 		periphery.onOffEating();
 
 		//LOADING DOODLE
-		periphery.conscousLoading();
+		//periphery.conscousLoading();
 		
 		
 		// SHOOTING DOODLE
-		periphery.shootButton();
+		//periphery.shootButton();
 		// SEEING DOODLE
 
 	}

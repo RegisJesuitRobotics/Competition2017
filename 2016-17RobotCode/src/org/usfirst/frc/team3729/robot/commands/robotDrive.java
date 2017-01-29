@@ -17,10 +17,10 @@ public class robotDrive {
 	double rightMotorInput = 1;
 
 	public robotDrive(XboxControler xbox) {
-		RightMotor1 = new CANTalon(1);
-		RightMotor2 = new CANTalon(0);
-		LeftMotor1 = new CANTalon(2);
-		LeftMotor2 = new CANTalon(3);
+		RightMotor1 = new CANTalon(4);
+		RightMotor2 = new CANTalon(3);
+		LeftMotor1 = new CANTalon(1);
+		LeftMotor2 = new CANTalon(2);
 		this._xbox = xbox;
 
 	}
@@ -29,7 +29,7 @@ public class robotDrive {
 
 		// This limits the power of the motor, it is a percentage
 		// This SHOULD NOT go above 1.0, not should it be negative
-		double motorLimiterRatioinital = 1; // change to
+		double motorLimiterRatioinital = 0.5; // change to
 		double motorLimiterRatio = motorLimiterRatioinital;
 		double forwardInput = _xbox.GetForwardInput();
 		double turnInput = _xbox.GetTurnInput();
@@ -91,15 +91,15 @@ public class robotDrive {
 		} else {
 			motorLimiterRatio = motorLimiterRatioinital;
 		}
-		RightMotor1.set(-rightMotorInput * motorLimiterRatio);
-		LeftMotor1.set(leftMotorInput * motorLimiterRatio);
-		RightMotor2.set(-rightMotorInput * motorLimiterRatio);
-		LeftMotor2.set(leftMotorInput * motorLimiterRatio);
+		RightMotor1.set(rightMotorInput * motorLimiterRatio);
+		LeftMotor1.set(-leftMotorInput * motorLimiterRatio);
+		RightMotor2.set(rightMotorInput * motorLimiterRatio);
+		LeftMotor2.set(-leftMotorInput * motorLimiterRatio);
 		// System.out.println(leftMotorInput + "left");
 		// System.out.println(rightMotorInput + "right");
 	}
 
-	public void mechenumDrive(double currentHeading) {
+	public void mechenumDrive() {
 		boolean leftBumper = _xbox.GetLeftBumper();
 		boolean rightBumper = _xbox.GetRightBumper();
 		double angle;
@@ -115,19 +115,19 @@ public class robotDrive {
 		}
 
 		if (leftBumper == true) {
-			currentHeading = gyro.getAngle();
+			// currentHeading = gyro.getAngle();
 			isRight = false;
-			strafeStraight(1, currentHeading, isRight);
+			strafeStraight(gyro.getAngle(), isRight);
 
 		} else if (rightBumper == true) {
-			currentHeading = gyro.getAngle();
+			// currentHeading = gyro.getAngle();
 			isRight = true;
-			strafeStraight(1, currentHeading, isRight);
+			strafeStraight(gyro.getAngle(), isRight);
 		}
 
 	}
 
-	private void strafeStraight(double speed, double currentHeading, boolean isRight) {
+	private void strafeStraight(double currentHeading, boolean isRight) {
 		double direction;
 		double angle = gyro.getAngle();
 		if (isRight == true) {
