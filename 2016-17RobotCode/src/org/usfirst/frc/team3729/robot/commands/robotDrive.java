@@ -1,13 +1,14 @@
 package org.usfirst.frc.team3729.robot.commands;
 
-import com.ctre.*;
-
+import com.ctre.CANTalon;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.Talon;
 
 public class robotDrive {
 	CANTalon RightMotor1, LeftMotor1, RightMotor2, LeftMotor2;
 	XboxControler _xbox;
+	DriverStation driverStation;
 	AnalogGyro gyro;
 	boolean isRight;
 	double motorLimiterRatioinital = 0.8;
@@ -97,6 +98,7 @@ public class robotDrive {
 		LeftMotor2.set(-leftMotorInput * motorLimiterRatio);
 		// System.out.println(leftMotorInput + "left");
 		// System.out.println(rightMotorInput + "right");
+
 	}
 
 	public void mechenumDrive() {
@@ -162,23 +164,54 @@ public class robotDrive {
 		double angle = gyro.getAngle();
 
 		if (angle >= currentHeading + .05) {
-			LeftMotor1.set(speed * .75);
-			LeftMotor2.set(speed * .75);
-			RightMotor1.set(-speed);
-			RightMotor2.set(-speed);
+
+			RightMotor1.set(speed);
+			LeftMotor1.set(-speed * .75);
+			RightMotor2.set(speed);
+			LeftMotor2.set(-speed * .75);
 			System.out.println("right");
+
 		} else if (angle <= currentHeading - .05) {
 			System.out.println("left");
-			LeftMotor1.set(speed);
-			LeftMotor2.set(speed);
-			RightMotor1.set(-speed * .75);
-			RightMotor2.set(-speed * .75);
+			RightMotor1.set(speed * .75);
+			LeftMotor1.set(-speed);
+			RightMotor2.set(speed * .75);
+			LeftMotor2.set(-speed);
+
 		} else {
 			System.out.println("straight");
-			LeftMotor1.set(speed);
-			LeftMotor2.set(speed);
-			RightMotor1.set(-speed);
-			RightMotor2.set(-speed);
+			RightMotor1.set(speed);
+			LeftMotor1.set(-speed);
+			RightMotor2.set(speed);
+			LeftMotor2.set(-speed);
 		}
+	}
+	public void TurnAround() {
+		gyro.reset();
+		do {
+			LeftMotor1.set(.5);
+			LeftMotor2.set(.5);
+			RightMotor1.set(-.5);
+			RightMotor2.set(.5);
+		} while (gyro.getAngle() <= 180 && driverStation.isAutonomous() == true);
+		// leftMotorInput = turnInput;
+		// rightMotorInput = -turnInput;
+		// System.out.println("spin right")
+	}
+	public void StopAutonomous() {
+		if (driverStation.isAutonomous()) {
+			this.Stop();
+		}
+	}
+	public void Stop() {
+		LeftMotor1.set(-.2);
+		LeftMotor2.set(-.2);
+		RightMotor1.set(-.2);
+		RightMotor2.set(-.2);
+		Timer.delay(.1);
+		LeftMotor1.set(0);
+		LeftMotor2.set(0);
+		RightMotor1.set(0);
+		RightMotor2.set(0);
 	}
 }
