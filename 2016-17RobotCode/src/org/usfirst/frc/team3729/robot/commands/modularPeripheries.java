@@ -8,33 +8,36 @@ public class modularPeripheries {
 	Relay EatMotor1, EatMotor2;
 	CANTalon ShootyMotor1, ShootyMotor2, LoadMotor;
 	XboxControler _xbox;
+	boolean eatIsRunning = false;
 
 	public modularPeripheries(XboxControler xbox) {
 		EatMotor1 = new Relay(0);
 		EatMotor2 = new Relay(1);
-		//LoadMotor = new CANTalon(9);
-		//ShootyMotor1 = new CANTalon(7);
-		//ShootyMotor2 = new CANTalon(8);
+		// LoadMotor = new CANTalon(9);
+		// ShootyMotor1 = new CANTalon(7);
+		// ShootyMotor2 = new CANTalon(8);
 		this._xbox = xbox;
 	}
 
 	// EATING DOODLES
 	public void onOffEating() {
-		boolean isRunning = false;
-		if (_xbox.GetY() == true && isRunning == true) {
-			isRunning = false;
+		// Push A to START
+		// Push Y to STOP
+
+		if (_xbox.GetY() == true) {
+			eatIsRunning = false;
 		}
-		if (_xbox.GetA() == true && isRunning == false) {
-			isRunning = true;
+		if (_xbox.GetA() == true) {
+			eatIsRunning = true;
 		}
 		// The motor setting thing
 		// git good
-		if (isRunning == true) {
-			EatMotor1.set(Relay.Value.kOff);
-			EatMotor2.set(Relay.Value.kOff);
-		} else if (isRunning == false) {
+		if (eatIsRunning == true) {
 			EatMotor1.set(Relay.Value.kReverse);
 			EatMotor2.set(Relay.Value.kReverse);
+		} else if (eatIsRunning == false) {
+			EatMotor1.set(Relay.Value.kOff);
+			EatMotor2.set(Relay.Value.kOff);
 		}
 	}
 

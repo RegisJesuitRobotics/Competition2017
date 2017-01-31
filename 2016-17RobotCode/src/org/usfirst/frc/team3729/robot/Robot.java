@@ -101,8 +101,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		// DRIVING DOODLE
-	
-		
 		drive.arcadeDrive();
 		drive.mechenumDrive();
 
