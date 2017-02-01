@@ -18,12 +18,10 @@ public class modularPeripheries {
 		// ShootyMotor2 = new CANTalon(8);
 		this._xbox = xbox;
 	}
-
-	// EATING DOODLES
+	// COLLECING DOODLES
 	public void onOffEating() {
 		// Push A to START
 		// Push Y to STOP
-
 		if (_xbox.GetY() == true) {
 			eatIsRunning = false;
 		}
@@ -40,8 +38,7 @@ public class modularPeripheries {
 			EatMotor2.set(Relay.Value.kOff);
 		}
 	}
-
-	// LOADING DOODLES
+	// LOADING DOODLES (why, Jackson?)
 	// Make a timer so the motor goes 360 deg when you hit B
 	public void conscousLoading() {
 		if (_xbox.GetB() == true) {
@@ -56,11 +53,9 @@ public class modularPeripheries {
 					}
 				}
 			};
-
 		}
 	}
-
-	// SHOOTING DOODLES
+	// SHOOTING DOODLES (why?)
 	public void shootButton() {
 		if (_xbox.GetA() == true) {
 			ShootyMotor1.set(0.5);
@@ -69,5 +64,4 @@ public class modularPeripheries {
 			// System.out.println("elf");
 		}
 	}
-
 }
