@@ -7,7 +7,8 @@ import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import edu.wpi.first.wpilibj.AnalogGyro;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -17,11 +18,16 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	// final String defaultAuto = "Default";
-	// final String customAuto = "My Auto";
-	// String autoSelected;
-	// SendableChooser chooser;
+
+	// THESE ARE THE AUTONIMOUS THINGIES
+	final String defaultAuto = "Default";
+	final String autonomousPath1 = "Autonomous Path High Center Goal";
+	final String autonomousPath2 = "Autonomous Path High Left Goal";
+	final String autonomousPath3 = "Autonomous Path Defense Driveover";
+	String autoSelected;
+	boolean automove;
 	robotDrive drive;
+	SendableChooser chooser;
 	XboxControler xbox;
 	modularPeripheries periphery;
 	AnalogGyro gyro;
@@ -42,6 +48,13 @@ public class Robot extends IterativeRobot {
 		periphery = new modularPeripheries(xbox);
 		gyro = new AnalogGyro(0);
 		// cam = new USBCamera();
+
+		chooser = new SendableChooser();
+		chooser.addDefault("Default Auto", defaultAuto);
+		chooser.addObject("Autonomous Path High Center Goal", autonomousPath1);
+		chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
+		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
+		SmartDashboard.putData("Auto choices", chooser);
 
 		gyro.initGyro();
 		gyro.calibrate();
@@ -65,6 +78,8 @@ public class Robot extends IterativeRobot {
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
 		// System.out.println("Auto selected: " + autoSelected);
+		autoSelected = (String) chooser.getSelected();
+
 		gyro.initGyro();
 		gyro.calibrate();
 		gyro.reset();
@@ -75,13 +90,39 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		System.out.println("gyro start heading:" + gyro.getAngle());
-		gyro.reset();
-		System.out.println("gyro after reset:" + gyro.getAngle());
+
+		switch (autoSelected) {
+		case autonomousPath1:
+			if (automove == true) {
+				automove = false;
+			}
+			break;
+
+		case autonomousPath2:
+			if (automove == true) {
+				automove = false;
+			}
+			break;
+
+		case autonomousPath3:
+			if (automove == true) {
+
+				automove = false;
+			}
+			break;
+		case defaultAuto:
+		default:
+			if (automove == true) {
+
+				automove = false;
+			}
+			break;
+		}
+
 		// switch (autoSelected) {
 		// case customAuto:
 		// Put custom auto code here
-		// break;
+		// break;+
 		// case defaultAuto:
 		// default:
 		// Talon RightMotor, LeftMotor;
@@ -107,12 +148,11 @@ public class Robot extends IterativeRobot {
 		// EATING DOODLE
 		periphery.onOffEating();
 
-		//LOADING DOODLE
-		//periphery.conscousLoading();
-		
-		
+		// LOADING DOODLE
+		// periphery.conscousLoading();
+
 		// SHOOTING DOODLE
-		//periphery.shootButton();
+		// periphery.shootButton();
 		// SEEING DOODLE
 
 	}

@@ -1,11 +1,22 @@
 package org.usfirst.frc.team3729.robot.commands;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.AnalogGyro;
 
 public class robotDrive {
+	// MATH STUFF
+	double circumference = 7.5 * 3.14159 / 12;
+	double motorspeed = 18.52;
+	double acceleration;
+	Calendar cal;
+
 	CANTalon RightMotor1, LeftMotor1, RightMotor2, LeftMotor2;
 	XboxControler _xbox;
 	DriverStation driverStation;
@@ -186,6 +197,7 @@ public class robotDrive {
 			LeftMotor2.set(-speed);
 		}
 	}
+
 	public void TurnAround() {
 		gyro.reset();
 		do {
@@ -198,11 +210,13 @@ public class robotDrive {
 		// rightMotorInput = -turnInput;
 		// System.out.println("spin right")
 	}
+
 	public void StopAutonomous() {
 		if (driverStation.isAutonomous()) {
 			this.Stop();
 		}
 	}
+
 	public void Stop() {
 		LeftMotor1.set(-.2);
 		LeftMotor2.set(-.2);
@@ -213,5 +227,29 @@ public class robotDrive {
 		LeftMotor2.set(0);
 		RightMotor1.set(0);
 		RightMotor2.set(0);
+	} 
+
+	public void DriveAutonomous(double distanceinitial, double speed) {
+		if (this.driverStation.isAutonomous()) {
+			this.Drive(distanceinitial, speed);
+		}
+	}
+
+	public void Drive(double distanceinitial, double speed) {
+		DecimalFormat df = new DecimalFormat("#.###");
+		df.setRoundingMode(RoundingMode.CEILING);
+		double time = Math.round(circumference * 1000 * distanceinitial / (motorspeed * speed));
+		cal = Calendar.getInstance();
+		cal.add(Calendar.MILLISECOND, Integer.parseInt(df.format(time)));
+		Date future = cal.getTime();
+		Date dat = new Date();
+		double currentheading = gyro.getAngle();
+		while (dat.compareTo(future) != 1) {
+			driveStraight(speed, currentheading);
+			dat = new Date();
+			System.out.println(dat.compareTo(future));
+		}
+		driveStraight(0, currentheading);
+
 	}
 }
