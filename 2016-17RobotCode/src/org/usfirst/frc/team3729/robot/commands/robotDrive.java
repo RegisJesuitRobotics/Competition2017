@@ -8,19 +8,15 @@ import java.util.Date;
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 
 public class robotDrive {
-	// MATH STUFF
-	double circumference = 7.5 * 3.14159 / 12;
-	double motorspeed = 18.52;
-	double acceleration;
-	Calendar cal;
 
 	CANTalon RightMotor1, LeftMotor1, RightMotor2, LeftMotor2;
 	XboxControler _xbox;
 	DriverStation driverStation;
-	AnalogGyro gyro;
+	ADXRS450_Gyro gyro;
 	boolean isRight;
 	double motorLimiterRatioinital = 0.8;
 	double motorLimiterRatio = motorLimiterRatioinital;
@@ -29,10 +25,11 @@ public class robotDrive {
 	double rightMotorInput = 1;
 
 	public robotDrive(XboxControler xbox) {
-		RightMotor1 = new CANTalon(4);
-		RightMotor2 = new CANTalon(3);
-		LeftMotor1 = new CANTalon(1);
-		LeftMotor2 = new CANTalon(2);
+		RightMotor2 = new CANTalon(4);
+		RightMotor1 = new CANTalon(3);
+		LeftMotor2 = new CANTalon(1);
+		LeftMotor1 = new CANTalon(2);
+		gyro = new ADXRS450_Gyro();
 		this._xbox = xbox;
 
 	}
@@ -41,7 +38,7 @@ public class robotDrive {
 
 		// This limits the power of the motor, it is a percentage
 		// This SHOULD NOT go above 1.0, not should it be negative
-		double motorLimiterRatioinital = 0.5; // change to
+		double motorLimiterRatioinital = 0.7; // change to
 		double motorLimiterRatio = motorLimiterRatioinital;
 		double forwardInput = _xbox.GetForwardInput();
 		double turnInput = _xbox.GetTurnInput();
@@ -198,6 +195,11 @@ public class robotDrive {
 		}
 	}
 
+	// AUTONOMOUS STUFF
+	// IMPORTANT
+	// WORDS
+	// TEXT
+
 	public void TurnAround() {
 		gyro.reset();
 		do {
@@ -227,29 +229,6 @@ public class robotDrive {
 		LeftMotor2.set(0);
 		RightMotor1.set(0);
 		RightMotor2.set(0);
-	} 
-
-	public void DriveAutonomous(double distanceinitial, double speed) {
-		if (this.driverStation.isAutonomous()) {
-			this.Drive(distanceinitial, speed);
-		}
 	}
 
-	public void Drive(double distanceinitial, double speed) {
-		DecimalFormat df = new DecimalFormat("#.###");
-		df.setRoundingMode(RoundingMode.CEILING);
-		double time = Math.round(circumference * 1000 * distanceinitial / (motorspeed * speed));
-		cal = Calendar.getInstance();
-		cal.add(Calendar.MILLISECOND, Integer.parseInt(df.format(time)));
-		Date future = cal.getTime();
-		Date dat = new Date();
-		double currentheading = gyro.getAngle();
-		while (dat.compareTo(future) != 1) {
-			driveStraight(speed, currentheading);
-			dat = new Date();
-			System.out.println(dat.compareTo(future));
-		}
-		driveStraight(0, currentheading);
-
-	}
 }

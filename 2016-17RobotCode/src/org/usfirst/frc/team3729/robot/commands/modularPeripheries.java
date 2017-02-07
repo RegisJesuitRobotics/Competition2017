@@ -1,18 +1,17 @@
 package org.usfirst.frc.team3729.robot.commands;
 
-import com.ctre.*;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.*;
+import com.ctre.CANTalon;
+
+import edu.wpi.first.wpilibj.Relay;
 
 public class modularPeripheries {
-	Relay EatMotor1, EatMotor2;
+	Relay EatMotor1;
 	CANTalon ShootyMotor1, ShootyMotor2, LoadMotor;
 	XboxControler _xbox;
 	boolean eatIsRunning = false;
 
 	public modularPeripheries(XboxControler xbox) {
 		EatMotor1 = new Relay(0);
-		EatMotor2 = new Relay(1);
 		// LoadMotor = new CANTalon(9);
 		// ShootyMotor1 = new CANTalon(7);
 		// ShootyMotor2 = new CANTalon(8);
@@ -21,53 +20,58 @@ public class modularPeripheries {
 
 	// EATING DOODLES
 	public void onOffEating() {
-		// Push A to START
+		// Push X to START
 		// Push Y to STOP
 
-		if (_xbox.GetY() == true) {
-			eatIsRunning = false;
-		}
-		if (_xbox.GetA() == true) {
+		if (_xbox.GetX() == true) {
 			eatIsRunning = true;
+			System.out.println("IsRunning");
+			
+			
+		}
+		if (_xbox.GetB() == true) {
+			eatIsRunning = false;
+			System.out.println("IsntRunning");
 		}
 		// The motor setting thing
 		// git good
-		if (eatIsRunning == true) {
+		if (eatIsRunning ==false){
+			EatMotor1.set(Relay.Value.kOff);}
+		
+			else if (eatIsRunning == true) {
 			EatMotor1.set(Relay.Value.kReverse);
-			EatMotor2.set(Relay.Value.kReverse);
-		} else if (eatIsRunning == false) {
-			EatMotor1.set(Relay.Value.kOff);
-			EatMotor2.set(Relay.Value.kOff);
+		
 		}
 	}
 
 	// LOADING DOODLES
 	// Make a timer so the motor goes 360 deg when you hit B
-	public void conscousLoading() {
-		if (_xbox.GetB() == true) {
 
-			Thread thread2 = new Thread() {
-				public void run() {
-					int timer = 0;
-					while (timer < 100) {
-						LoadMotor.set(0.5);
-						timer++;
-						Timer.delay(1);
-					}
-				}
-			};
-
-		}
-	}
+	// public void conscousLoading() {
+	// if (_xbox.GetB() == true) {
+	//
+	// Thread thread2 = new Thread() {
+	// public void run() {
+	// int timer = 0;
+	// while (timer < 100) {
+	// LoadMotor.set(0.5);
+	// timer++;
+	// Timer.delay(1);
+	// }
+	// }
+	// };
+	//
+	// }
+	// }
 
 	// SHOOTING DOODLES
-	public void shootButton() {
-		if (_xbox.GetA() == true) {
-			ShootyMotor1.set(0.5);
-			ShootyMotor2.set(0.5);
-		} else {
-			// System.out.println("elf");
-		}
-	}
+	// public void shootButton() {
+	// if (_xbox.GetA() == true) {
+	// ShootyMotor1.set(0.5);
+	// ShootyMotor2.set(0.5);
+	// } else {
+	// // System.out.println("elf");
+	// }
+	// }
 
 }

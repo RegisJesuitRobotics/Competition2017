@@ -2,10 +2,11 @@
 package org.usfirst.frc.team3729.robot;
 
 import org.usfirst.frc.team3729.robot.commands.XboxControler;
-import org.usfirst.frc.team3729.robot.commands.robotDrive;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
-import edu.wpi.first.wpilibj.AnalogGyro;
+import org.usfirst.frc.team3729.robot.commands.robotDrive;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
+	ADXRS450_Gyro gyro;
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
 	final String autonomousPath1 = "Autonomous Path High Center Goal";
@@ -30,7 +31,7 @@ public class Robot extends IterativeRobot {
 	SendableChooser chooser;
 	XboxControler xbox;
 	modularPeripheries periphery;
-	AnalogGyro gyro;
+
 	// USBCamera cam;
 
 	/**
@@ -46,7 +47,7 @@ public class Robot extends IterativeRobot {
 		xbox = new XboxControler(0);
 		drive = new robotDrive(xbox);
 		periphery = new modularPeripheries(xbox);
-		gyro = new AnalogGyro(0);
+		gyro = new ADXRS450_Gyro();
 		// cam = new USBCamera();
 
 		chooser = new SendableChooser();
@@ -56,7 +57,7 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
 		SmartDashboard.putData("Auto choices", chooser);
 
-		gyro.initGyro();
+
 		gyro.calibrate();
 		gyro.reset();
 	}
@@ -80,7 +81,6 @@ public class Robot extends IterativeRobot {
 		// System.out.println("Auto selected: " + autoSelected);
 		autoSelected = (String) chooser.getSelected();
 
-		gyro.initGyro();
 		gyro.calibrate();
 		gyro.reset();
 	}
