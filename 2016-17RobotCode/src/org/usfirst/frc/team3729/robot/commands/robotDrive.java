@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 
 public class robotDrive {
 
-	CANTalon RightMotor1, LeftMotor1, RightMotor2, LeftMotor2;
+	CANTalon RightMotorFront, LeftMotorFront, RightMotorBack, LeftMotorBack;
 	XboxControler _xbox;
 	DriverStation driverStation;
 	ADXRS450_Gyro gyro;
@@ -25,10 +25,10 @@ public class robotDrive {
 	double rightMotorInput = 1;
 
 	public robotDrive(XboxControler xbox) {
-		RightMotor2 = new CANTalon(4);
-		RightMotor1 = new CANTalon(3);
-		LeftMotor2 = new CANTalon(1);
-		LeftMotor1 = new CANTalon(2);
+		RightMotorBack = new CANTalon(4);
+		RightMotorFront = new CANTalon(3);
+		LeftMotorBack = new CANTalon(1);
+		LeftMotorFront = new CANTalon(2);
 		gyro = new ADXRS450_Gyro();
 		this._xbox = xbox;
 
@@ -38,7 +38,7 @@ public class robotDrive {
 
 		// This limits the power of the motor, it is a percentage
 		// This SHOULD NOT go above 1.0, not should it be negative
-		double motorLimiterRatioinital = 0.7; // change to
+		double motorLimiterRatioinital = 0.5; // change to
 		double motorLimiterRatio = motorLimiterRatioinital;
 		double forwardInput = _xbox.GetForwardInput();
 		double turnInput = _xbox.GetTurnInput();
@@ -50,8 +50,8 @@ public class robotDrive {
 		// System.out.println(turnInput + "turn");
 
 		if (forwardInput > deadZone && turnInput > deadZone) {
-			leftMotorInput = forwardInput;
-			rightMotorInput = turnInput * .25;
+			leftMotorInput = forwardInput * 1.5;
+			rightMotorInput = turnInput * .05;
 			System.out.println("turn forward right");
 			// Turn Forward Right
 		} else if (forwardInput <= deadZone && forwardInput >= -deadZone && turnInput > deadZone) {
@@ -66,8 +66,8 @@ public class robotDrive {
 			// Move Forward
 		} else if (forwardInput > deadZone && turnInput < deadZone) {
 			// Left input is negative, so it must be negated to move forward.
-			leftMotorInput = -turnInput * .25;
-			rightMotorInput = forwardInput;
+			leftMotorInput = turnInput * .1;
+			rightMotorInput = forwardInput * 1.25;
 			System.out.println("turn forward left");
 			// Turn Forwards Left
 		} else if (forwardInput <= deadZone && forwardInput >= -deadZone && turnInput < -deadZone) {
@@ -79,13 +79,13 @@ public class robotDrive {
 			System.out.println("spin left");
 			// Spin Left
 		} else if (forwardInput < -deadZone && turnInput < -deadZone) {
-			leftMotorInput = turnInput * .25;
-			rightMotorInput = forwardInput;
-			System.out.println("turn backwards left");
+			leftMotorInput = -turnInput * .1;
+			rightMotorInput = forwardInput * 1.25;
+			System.out.println("turn backwards left"); 
 			// Turn Backwards Left
 		} else if (forwardInput < -deadZone && turnInput > deadZone) {
-			leftMotorInput = forwardInput;
-			rightMotorInput = -turnInput * .25;
+			leftMotorInput = forwardInput * 1.25;
+			rightMotorInput = -turnInput * .1;
 			System.out.println("turn backwards right");
 			// Turn Backwards Right
 		} else if (forwardInput < -deadZone) {
@@ -96,14 +96,15 @@ public class robotDrive {
 		}
 		// Speed Switch
 		if (_xbox.GetRightTrigger() > deadZone) {
-			motorLimiterRatio = (_xbox.GetRightTrigger() * 0.5);
+			motorLimiterRatio =  0.8;
+					//(_xbox.GetRightTrigger() * 0.5);
 		} else {
 			motorLimiterRatio = motorLimiterRatioinital;
 		}
-		RightMotor1.set(rightMotorInput * motorLimiterRatio);
-		LeftMotor1.set(-leftMotorInput * motorLimiterRatio);
-		RightMotor2.set(rightMotorInput * motorLimiterRatio);
-		LeftMotor2.set(-leftMotorInput * motorLimiterRatio);
+		RightMotorFront.set(rightMotorInput * motorLimiterRatio);
+		LeftMotorFront.set(-leftMotorInput * motorLimiterRatio);
+		RightMotorBack.set(rightMotorInput * motorLimiterRatio);
+		LeftMotorBack.set(-leftMotorInput * motorLimiterRatio);
 		// System.out.println(leftMotorInput + "left");
 		// System.out.println(rightMotorInput + "right");
 
@@ -126,12 +127,12 @@ public class robotDrive {
 
 		if (leftBumper == true) {
 			// currentHeading = gyro.getAngle();
-			isRight = false;
+			isRight = true;
 			strafeStraight(gyro.getAngle(), isRight);
 
 		} else if (rightBumper == true) {
 			// currentHeading = gyro.getAngle();
-			isRight = true;
+			isRight = false;
 			strafeStraight(gyro.getAngle(), isRight);
 		}
 
@@ -147,23 +148,23 @@ public class robotDrive {
 		}
 
 		if (angle >= currentHeading + .05) {
-			RightMotor1.set(-rightMotorInput * motorLimiterRatio * direction);
-			LeftMotor1.set(-leftMotorInput * motorLimiterRatio * .75 * direction);
-			RightMotor2.set(rightMotorInput * motorLimiterRatio * direction);
-			LeftMotor2.set(leftMotorInput * motorLimiterRatio * .75 * direction);
+			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
+			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * .80 * direction);
+			RightMotorBack.set(rightMotorInput * motorLimiterRatio * direction);
+			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * .75 * direction);
 			System.out.println("right");
 		} else if (angle <= currentHeading - .05) {
 			System.out.println("left");
-			RightMotor1.set(-rightMotorInput * motorLimiterRatio * .75 * direction);
-			LeftMotor1.set(-leftMotorInput * motorLimiterRatio * direction);
-			RightMotor2.set(rightMotorInput * motorLimiterRatio * .75 * direction);
-			LeftMotor2.set(leftMotorInput * motorLimiterRatio * direction);
+			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * .80 * direction);
+			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction);
+			RightMotorBack.set(rightMotorInput * motorLimiterRatio * .75 * direction);
+			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * direction);
 		} else {
 			System.out.println("straight");
-			RightMotor1.set(-rightMotorInput * motorLimiterRatio * direction);
-			LeftMotor1.set(-leftMotorInput * motorLimiterRatio * direction);
-			RightMotor2.set(rightMotorInput * motorLimiterRatio * direction);
-			LeftMotor2.set(leftMotorInput * motorLimiterRatio * direction);
+			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
+			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction);
+			RightMotorBack.set(rightMotorInput * motorLimiterRatio * direction);
+			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * direction);
 		}
 	}
 
@@ -173,25 +174,25 @@ public class robotDrive {
 
 		if (angle >= currentHeading + .05) {
 
-			RightMotor1.set(speed);
-			LeftMotor1.set(-speed * .75);
-			RightMotor2.set(speed);
-			LeftMotor2.set(-speed * .75);
+			RightMotorFront.set(speed);
+			LeftMotorFront.set(-speed * .75);
+			RightMotorBack.set(speed);
+			LeftMotorBack.set(-speed * .75);
 			System.out.println("right");
 
 		} else if (angle <= currentHeading - .05) {
 			System.out.println("left");
-			RightMotor1.set(speed * .75);
-			LeftMotor1.set(-speed);
-			RightMotor2.set(speed * .75);
-			LeftMotor2.set(-speed);
+			RightMotorFront.set(speed * .75);
+			LeftMotorFront.set(-speed);
+			RightMotorBack.set(speed * .75);
+			LeftMotorBack.set(-speed);
 
 		} else {
 			System.out.println("straight");
-			RightMotor1.set(speed);
-			LeftMotor1.set(-speed);
-			RightMotor2.set(speed);
-			LeftMotor2.set(-speed);
+			RightMotorFront.set(speed);
+			LeftMotorFront.set(-speed);
+			RightMotorBack.set(speed);
+			LeftMotorBack.set(-speed);
 		}
 	}
 
@@ -203,10 +204,10 @@ public class robotDrive {
 	public void TurnAround() {
 		gyro.reset();
 		do {
-			LeftMotor1.set(.5);
-			LeftMotor2.set(.5);
-			RightMotor1.set(-.5);
-			RightMotor2.set(.5);
+			LeftMotorFront.set(.5);
+			LeftMotorBack.set(.5);
+			RightMotorFront.set(-.5);
+			RightMotorBack.set(.5);
 		} while (gyro.getAngle() <= 180 && driverStation.isAutonomous() == true);
 		// leftMotorInput = turnInput;
 		// rightMotorInput = -turnInput;
@@ -220,15 +221,15 @@ public class robotDrive {
 	}
 
 	public void Stop() {
-		LeftMotor1.set(-.2);
-		LeftMotor2.set(-.2);
-		RightMotor1.set(-.2);
-		RightMotor2.set(-.2);
+		LeftMotorFront.set(-.2);
+		LeftMotorBack.set(-.2);
+		RightMotorFront.set(-.2);
+		RightMotorBack.set(-.2);
 		Timer.delay(.1);
-		LeftMotor1.set(0);
-		LeftMotor2.set(0);
-		RightMotor1.set(0);
-		RightMotor2.set(0);
+		LeftMotorFront.set(0);
+		LeftMotorBack.set(0);
+		RightMotorFront.set(0);
+		RightMotorBack.set(0);
 	}
 
 }

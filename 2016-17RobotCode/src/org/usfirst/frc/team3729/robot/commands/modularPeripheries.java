@@ -23,11 +23,15 @@ public class modularPeripheries {
 		// Push X to START
 		// Push Y to STOP
 
+		if (_xbox.GetA() == true) {
+
+			System.out.println("A");
+
+		}
 		if (_xbox.GetX() == true) {
 			eatIsRunning = true;
 			System.out.println("IsRunning");
-			
-			
+
 		}
 		if (_xbox.GetB() == true) {
 			eatIsRunning = false;
@@ -35,12 +39,13 @@ public class modularPeripheries {
 		}
 		// The motor setting thing
 		// git good
-		if (eatIsRunning ==false){
-			EatMotor1.set(Relay.Value.kOff);}
-		
-			else if (eatIsRunning == true) {
+		if (eatIsRunning == false) {
+			EatMotor1.set(Relay.Value.kOff);
+		}
+
+		else if (eatIsRunning == true) {
 			EatMotor1.set(Relay.Value.kReverse);
-		
+
 		}
 	}
 
