@@ -26,19 +26,19 @@ public class XboxControler extends Joystick {
 	}
 
 	public boolean GetA() {
-		return super.getRawButton(0);
-	}
-
-	public boolean GetX() {
-		return super.getRawButton(3);
+		return super.getRawButton(1);
 	}
 
 	public boolean GetB() {
 		return super.getRawButton(2);
 	}
 
+	public boolean GetX() {
+		return super.getRawButton(3);
+	}
+
 	public boolean GetY() {
-		return super.getRawButton(1);
+		return super.getRawButton(4);
 	}
 
 	public boolean GetLeftBumper() {
@@ -72,4 +72,3 @@ public class XboxControler extends Joystick {
 		}
 	}
 }
-

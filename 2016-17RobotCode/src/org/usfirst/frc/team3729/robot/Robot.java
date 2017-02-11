@@ -147,6 +147,7 @@ public class Robot extends IterativeRobot {
 
 		// EATING DOODLE
 		periphery.onOffEating();
+		periphery.GearNoms();
 
 		// LOADING DOODLE
 		// periphery.conscousLoading();

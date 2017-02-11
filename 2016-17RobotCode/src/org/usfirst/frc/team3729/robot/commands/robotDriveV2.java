@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 
-public class robotDrive {
+public class robotDriveV2 {
 
 	CANTalon RightMotorFront, LeftMotorFront, RightMotorBack, LeftMotorBack;
 	XboxControler _xbox;
@@ -24,7 +24,7 @@ public class robotDrive {
 	double leftMotorInput = 1;
 	double rightMotorInput = 1;
 
-	public robotDrive(XboxControler xbox) {
+	public robotDriveV2(XboxControler xbox) {
 		RightMotorBack = new CANTalon(4);
 		RightMotorFront = new CANTalon(3);
 		LeftMotorBack = new CANTalon(1);
@@ -81,7 +81,7 @@ public class robotDrive {
 		} else if (forwardInput < -deadZone && turnInput < -deadZone) {
 			leftMotorInput = -turnInput * .1;
 			rightMotorInput = forwardInput * 1.25;
-			System.out.println("turn backwards left"); 
+			System.out.println("turn backwards left");
 			// Turn Backwards Left
 		} else if (forwardInput < -deadZone && turnInput > deadZone) {
 			leftMotorInput = forwardInput * 1.25;
@@ -96,8 +96,8 @@ public class robotDrive {
 		}
 		// Speed Switch
 		if (_xbox.GetRightTrigger() > deadZone) {
-			motorLimiterRatio =  0.8;
-					//(_xbox.GetRightTrigger() * 0.5);
+			motorLimiterRatio = 0.8;
+			// (_xbox.GetRightTrigger() * 0.5);
 		} else {
 			motorLimiterRatio = motorLimiterRatioinital;
 		}
@@ -147,22 +147,20 @@ public class robotDrive {
 			direction = -1;
 		}
 
-		
 		if (angle >= currentHeading + .05) {
 			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * 2 * direction);
-			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio *  direction);
+			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction);
 			RightMotorBack.set(rightMotorInput * motorLimiterRatio * 2 * direction);
-			LeftMotorBack.set(leftMotorInput * motorLimiterRatio *  direction);
+			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * direction);
 			System.out.println("right");
-			
-			
+
 		} else if (angle <= currentHeading - .05) {
 			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
 			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * 2 * direction);
 			RightMotorBack.set(rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * 2 *  direction);
+			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * 2 * direction);
 			System.out.println("left");
-			
+
 		} else {
 			System.out.println("straight");
 			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
