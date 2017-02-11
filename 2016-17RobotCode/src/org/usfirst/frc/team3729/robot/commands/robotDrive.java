@@ -147,18 +147,22 @@ public class robotDrive {
 			direction = -1;
 		}
 
+		
 		if (angle >= currentHeading + .05) {
 			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * .80 * direction);
+			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * 2 * direction);
 			RightMotorBack.set(rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * .75 * direction);
+			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * 2 * direction);
 			System.out.println("right");
+			
+			
 		} else if (angle <= currentHeading - .05) {
-			System.out.println("left");
-			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * .80 * direction);
+			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * 2 * direction);
 			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction);
-			RightMotorBack.set(rightMotorInput * motorLimiterRatio * .75 * direction);
+			RightMotorBack.set(rightMotorInput * motorLimiterRatio * 2 * direction);
 			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * direction);
+			System.out.println("left");
+			
 		} else {
 			System.out.println("straight");
 			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
