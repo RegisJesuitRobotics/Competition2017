@@ -12,6 +12,7 @@ public class modularPeripheries {
 	Servo GearNom;
 	boolean eatIsRunning = false;
 	boolean gearIsNommed = false;
+	double deadzone = 0.2;
 
 	public modularPeripheries(XboxControler xbox) {
 		EatMotor1 = new Relay(0);
@@ -22,29 +23,35 @@ public class modularPeripheries {
 		this._xbox = xbox;
 	}
 
+	public void climbingKiddo() {
+		if (_xbox.GetY() == true) {
+
+		} else if (_xbox.GetY() == true && _xbox.GetLeftTrigger() > deadzone) {
+
+		}
+
+	}
+
 	public void GearNoms() {
 		if (_xbox.GetB() == true) {
 			GearNom.set(0.7);
 			System.out.println("A");
 
-		} else if (_xbox.GetY() == true) {
+		} else if (_xbox.GetB() == true && _xbox.GetLeftTrigger() > deadzone) {
 			GearNom.set(-0.7);
 			System.out.println("Y");
 		}
 
 	}
 
-	// EATING DOODLES
 	public void onOffEating() {
-		// Push X to START
-		// Push Y to STOP
+		// A
 
 		if (_xbox.GetA() == true) {
 			eatIsRunning = true;
 			System.out.println("IsRunning");
 
-		}
-		if (_xbox.GetX() == true) {
+		} else if (_xbox.GetA() == true && _xbox.GetLeftTrigger() > deadzone) {
 			eatIsRunning = false;
 			System.out.println("IsntRunning");
 		}
@@ -59,6 +66,31 @@ public class modularPeripheries {
 
 		}
 	}
+
+	// EATING DOODLES
+	// public void onOffEating() {
+	// // Push X to START
+	// // Push Y to STOP
+	//
+	// if (_xbox.GetA() == true) {
+	// eatIsRunning = true;
+	// System.out.println("IsRunning");
+	//
+	// } else if (_xbox.GetA() == true) {
+	// eatIsRunning = false;
+	// System.out.println("IsntRunning");
+	// }
+	// // The motor setting thing
+	// // git good
+	// if (eatIsRunning == false) {
+	// EatMotor1.set(Relay.Value.kOff);
+	// }
+	//
+	// else if (eatIsRunning == true) {
+	// EatMotor1.set(Relay.Value.kReverse);
+	//
+	// }
+	// }
 
 	// LOADING DOODLES
 	// Make a timer so the motor goes 360 deg when you hit B
