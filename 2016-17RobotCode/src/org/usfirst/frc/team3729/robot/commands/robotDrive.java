@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.*;
+
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -38,7 +40,7 @@ public class robotDrive {
 
 		// This limits the power of the motor, it is a percentage
 		// This SHOULD NOT go above 1.0, not should it be negative
-		double motorLimiterRatioinital = 0.5; // change to
+		double motorLimiterRatioinital = 0.5; // change to change speed
 		double motorLimiterRatio = motorLimiterRatioinital;
 		double forwardInput = _xbox.GetForwardInput();
 		double turnInput = _xbox.GetTurnInput();
@@ -220,6 +222,16 @@ public class robotDrive {
 	// // System.out.println("spin right")
 	// }
 
+	public void Autonomous() {
+		RightMotorFront.set(rightMotorInput * motorLimiterRatio);
+		LeftMotorFront.set(-leftMotorInput * motorLimiterRatio);
+		RightMotorBack.set(rightMotorInput * motorLimiterRatio);
+		LeftMotorBack.set(-leftMotorInput * motorLimiterRatio);
+		Timer.delay(2);
+		Stop();
+	}
+	
+	
 	public void StopAutonomous() {
 		if (driverStation.isAutonomous()) {
 			this.Stop();
