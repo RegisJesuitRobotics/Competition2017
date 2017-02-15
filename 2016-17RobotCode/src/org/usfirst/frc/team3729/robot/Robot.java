@@ -5,8 +5,10 @@ import org.usfirst.frc.team3729.robot.commands.XboxControler;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -21,7 +23,7 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	// ADXRS450_Gyro gyro;
+	ADXRS450_Gyro gyro;
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
 	final String autonomousPath1 = "Autonomous Path High Center Goal";
@@ -29,14 +31,14 @@ public class Robot extends IterativeRobot {
 	final String autonomousPath3 = "Autonomous Path Defense Driveover";
 	String autoSelected;
 	boolean automove;
+
 	robotDrive drive;
 	SendableChooser chooser;
 	XboxControler xbox;
 	modularPeripheries periphery;
-	NetworkTable table;
-	ITable stuff;
 
-	// USBCamera cam;
+
+	// UsbCamera cam;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -45,17 +47,17 @@ public class Robot extends IterativeRobot {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void robotInit() {
-		// chooser = new SendableChooser();
-		// chooser.addDefault("Default Auto", defaultAuto);
-		// chooser.addObject("My Auto", customAuto);
-		// SmartDashboard.putData("Auto choices", chooser);
+
 		xbox = new XboxControler(0);
 		drive = new robotDrive(xbox);
 		periphery = new modularPeripheries(xbox);
 
-		// gyro = new ADXRS450_Gyro();
+		gyro = new ADXRS450_Gyro();
 
-		// cam = new USBCamera();
+		// cam = CameraServer.getInstance().startAutomaticCapture();
+
+		gyro.calibrate();
+		gyro.reset();
 
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
@@ -64,12 +66,6 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
 		SmartDashboard.putData("Auto choices", chooser);
 
-		// gyro.calibrate();
-		// gyro.reset();
-
-		
-				
-				
 	}
 
 	/**
@@ -153,23 +149,25 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		// DRIVING DOODLE
 		drive.arcadeDrive();
-		drive.mechenumDrive();
+		// drive.mechenumDrive();
 
 		// EATING DOODLE
-		periphery.onOffEating();
-		periphery.GearNoms();
 		
-		table = NetworkTable.getTable("");
-		stuff = table.getSubTable("SmartDashboard");
-		double meme = stuff.getNumber("COG_AREA",0.0);
-		System.out.println("djsoigdvhoi "+meme);
+		periphery.climbingKiddo();
+		periphery.shootButton();
+		periphery.LoadingKiddo();
+		periphery.Noms();
+		
+		// table = NetworkTable.getTable("");
+		// stuff = table.getSubTable("SmartDashboard");
+		// double area = stuff.getNumber("COG_AREA",0.0);
+		// System.out.println("Area "+ area);
 
 		// LOADING DOODLE
 		// periphery.conscousLoading();
 
 		// SHOOTING DOODLE
-		// periphery.shootButton();
-		// SEEING DOODLE
+	
 
 	}
 

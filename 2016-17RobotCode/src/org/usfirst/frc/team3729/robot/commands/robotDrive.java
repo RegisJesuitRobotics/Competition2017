@@ -42,8 +42,8 @@ public class robotDrive {
 		// This SHOULD NOT go above 1.0, not should it be negative
 		double motorLimiterRatioinital = 0.5; // change to change speed
 		double motorLimiterRatio = motorLimiterRatioinital;
-		double forwardInput = _xbox.GetForwardInput();
-		double turnInput = _xbox.GetTurnInput();
+		double forwardInput = _xbox.GetLeftStick();
+		double turnInput = _xbox.GetRightStick();
 		double leftMotorInput = 0;
 		double rightMotorInput = 0;
 		double deadZone = 0.2;
