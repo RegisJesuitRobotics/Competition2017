@@ -113,7 +113,7 @@ public class Robot extends IterativeRobot {
 					drive.autoDrive(0.7);
 
 					seconds++;
-					// Timer.delay(1);
+					Timer.delay(1);
 				}
 			}
 
