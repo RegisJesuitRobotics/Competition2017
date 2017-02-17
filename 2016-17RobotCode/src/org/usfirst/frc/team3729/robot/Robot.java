@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,6 +35,7 @@ public class Robot extends IterativeRobot {
 	final String autonomousPath6 = "RED - RIGHT";
 	String autoSelected;
 	boolean automove;
+	int seconds;
 
 	robotDrive drive;
 	SendableChooser chooser;
@@ -91,7 +93,7 @@ public class Robot extends IterativeRobot {
 		// defaultAuto);
 		// System.out.println("Auto selected: " + autoSelected);
 		autoSelected = (String) chooser.getSelected();
-
+		seconds = 0;
 		// gyro.calibrate();
 		// gyro.reset();
 	}
@@ -106,61 +108,67 @@ public class Robot extends IterativeRobot {
 
 		case autonomousPath1: // BLUE - LEFT
 			if (automove == true) {
-				automove = false;
+
+				while (seconds >= 10) {
+					drive.autoDrive(0.7);
+
+					seconds++;
+					// Timer.delay(1);
+				}
 			}
-			break;
 
-		case autonomousPath2: // BLUE - MIDDLE
-			if (automove == true) {
-				automove = false;
-			}
-			break;
+			automove = false;
+		
+		break;
+	case autonomousPath2: // BLUE - MIDDLE
+	if(automove==true)
 
-		case autonomousPath3: // BLUE - RIGHT
-			if (automove == true) {
+	{
+		automove = false;
+	}break;
 
-				automove = false;
-			}
-		case autonomousPath4: // RED - LEFT
-			if (automove == true) {
+	case autonomousPath3: // BLUE - RIGHT
+	if(automove==true)
+	{
 
-				automove = false;
-			}
-		case autonomousPath5:// RED - MIDDLE
-			if (automove == true) {
+		automove = false;
+	}case autonomousPath4: // RED - LEFT
+	if(automove==true)
+	{
 
-				automove = false;
-			}
-		case autonomousPath6: // RED - RIGHT
-			if (automove == true) {
+		automove = false;
+	}case autonomousPath5:// RED - MIDDLE
+	if(automove==true)
+	{
 
-				automove = false;
-			}
-			break;
-		case defaultAuto:
-		default:
-			if (automove == true) {
+		automove = false;
+	}case autonomousPath6: // RED - RIGHT
+	if(automove==true)
+	{
 
-				automove = false;
-			}
-			break;
-		}
+		automove = false;
+	}break;case defaultAuto:default:if(automove==true)
+	{
 
-		// switch (autoSelected) {
-		// case customAuto:
-		// Put custom auto code here
-		// break;+
-		// case defaultAuto:
-		// default:
-		// Talon RightMotor, LeftMotor;
-		//
-		// RightMotor = new Talon(1);
-		// LeftMotor = new Talon(2);
-		//
-		// RightMotor.set(.5);
-		// LeftMotor.set(.5);
-		// break;
-		// }
+		automove = false;
+	}break;
+	}
+
+	// switch (autoSelected) {
+	// case customAuto:
+	// Put custom auto code here
+	// break;+
+	// case defaultAuto:
+	// default:
+	// Talon RightMotor, LeftMotor;
+	//
+	// RightMotor = new Talon(1);
+	// LeftMotor = new Talon(2);
+	//
+	// RightMotor.set(.5);
+	// LeftMotor.set(.5);
+	// break;
+	// }
 	}
 
 	/**
