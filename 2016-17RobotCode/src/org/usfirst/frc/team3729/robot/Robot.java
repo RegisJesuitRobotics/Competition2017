@@ -27,12 +27,12 @@ public class Robot extends IterativeRobot {
 	ADXRS450_Gyro gyro;
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
-	final String autonomousPath1 = "BLUE - LEFT";
-	final String autonomousPath2 = "BLUE - MIDDLE";
-	final String autonomousPath3 = "BLUE - RIGHT";
-	final String autonomousPath4 = "RED - LEFT";
-	final String autonomousPath5 = "RED - MIDDLE";
-	final String autonomousPath6 = "RED - RIGHT";
+	final String autonomousPath1 = "Just go straight then stop.";
+//	final String autonomousPath2 = "BLUE - MIDDLE";
+//	final String autonomousPath3 = "BLUE - RIGHT";
+//	final String autonomousPath4 = "RED - LEFT";
+//	final String autonomousPath5 = "RED - MIDDLE";
+//	final String autonomousPath6 = "RED - RIGHT";
 	String autoSelected;
 	boolean automove;
 	int seconds;
@@ -66,11 +66,11 @@ public class Robot extends IterativeRobot {
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("Autonomous Path High Center Goal", autonomousPath1);
-		chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
-		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
-		chooser.addObject("Autonomous Path High Center Goal", autonomousPath4);
-		chooser.addObject("Autonomous Path High Left Goal", autonomousPath5);
-		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath6);
+//		chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
+//		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
+//		chooser.addObject("Autonomous Path High Center Goal", autonomousPath4);
+//		chooser.addObject("Autonomous Path High Left Goal", autonomousPath5);
+//		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath6);
 		SmartDashboard.putData("Auto choices", chooser);
 
 	}
@@ -120,38 +120,38 @@ public class Robot extends IterativeRobot {
 			automove = false;
 		
 		break;
-	case autonomousPath2: // BLUE - MIDDLE
-	if(automove==true)
-
-	{
-		automove = false;
-	}break;
-
-	case autonomousPath3: // BLUE - RIGHT
-	if(automove==true)
-	{
-
-		automove = false;
-	}case autonomousPath4: // RED - LEFT
-	if(automove==true)
-	{
-
-		automove = false;
-	}case autonomousPath5:// RED - MIDDLE
-	if(automove==true)
-	{
-
-		automove = false;
-	}case autonomousPath6: // RED - RIGHT
-	if(automove==true)
-	{
-
-		automove = false;
-	}break;case defaultAuto:default:if(automove==true)
-	{
-
-		automove = false;
-	}break;
+		// case autonomousPath2: // BLUE - MIDDLE
+		// if(automove==true)
+		//
+		// {
+		// automove = false;
+		// }break;
+		//
+		// case autonomousPath3: // BLUE - RIGHT
+		// if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }case autonomousPath4: // RED - LEFT
+		// if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }case autonomousPath5:// RED - MIDDLE
+		// if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }case autonomousPath6: // RED - RIGHT
+		// if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }break;case defaultAuto:default:if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }break;
 	}
 
 	// switch (autoSelected) {
