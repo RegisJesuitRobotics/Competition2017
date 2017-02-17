@@ -26,9 +26,12 @@ public class Robot extends IterativeRobot {
 	ADXRS450_Gyro gyro;
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
-	final String autonomousPath1 = "Autonomous Path High Center Goal";
-	final String autonomousPath2 = "Autonomous Path High Left Goal";
-	final String autonomousPath3 = "Autonomous Path Defense Driveover";
+	final String autonomousPath1 = "BLUE - LEFT";
+	final String autonomousPath2 = "BLUE - MIDDLE";
+	final String autonomousPath3 = "BLUE - RIGHT";
+	final String autonomousPath4 = "RED - LEFT";
+	final String autonomousPath5 = "RED - MIDDLE";
+	final String autonomousPath6 = "RED - RIGHT";
 	String autoSelected;
 	boolean automove;
 
@@ -36,7 +39,6 @@ public class Robot extends IterativeRobot {
 	SendableChooser chooser;
 	XboxControler xbox;
 	modularPeripheries periphery;
-
 
 	// UsbCamera cam;
 
@@ -64,6 +66,9 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Autonomous Path High Center Goal", autonomousPath1);
 		chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
 		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
+		chooser.addObject("Autonomous Path High Center Goal", autonomousPath4);
+		chooser.addObject("Autonomous Path High Left Goal", autonomousPath5);
+		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath6);
 		SmartDashboard.putData("Auto choices", chooser);
 
 	}
@@ -96,21 +101,37 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-
+		automove = true;
 		switch (autoSelected) {
-		case autonomousPath1:
+
+		case autonomousPath1: // BLUE - LEFT
 			if (automove == true) {
 				automove = false;
 			}
 			break;
 
-		case autonomousPath2:
+		case autonomousPath2: // BLUE - MIDDLE
 			if (automove == true) {
 				automove = false;
 			}
 			break;
 
-		case autonomousPath3:
+		case autonomousPath3: // BLUE - RIGHT
+			if (automove == true) {
+
+				automove = false;
+			}
+		case autonomousPath4: // RED - LEFT
+			if (automove == true) {
+
+				automove = false;
+			}
+		case autonomousPath5:// RED - MIDDLE
+			if (automove == true) {
+
+				automove = false;
+			}
+		case autonomousPath6: // RED - RIGHT
 			if (automove == true) {
 
 				automove = false;
@@ -152,22 +173,16 @@ public class Robot extends IterativeRobot {
 		// drive.mechenumDrive();
 
 		// EATING DOODLE
-		
+
 		periphery.climbingKiddo();
 		periphery.shootButton();
 		periphery.LoadingKiddo();
 		periphery.Noms();
-		
+
 		// table = NetworkTable.getTable("");
 		// stuff = table.getSubTable("SmartDashboard");
 		// double area = stuff.getNumber("COG_AREA",0.0);
 		// System.out.println("Area "+ area);
-
-		// LOADING DOODLE
-		// periphery.conscousLoading();
-
-		// SHOOTING DOODLE
-	
 
 	}
 

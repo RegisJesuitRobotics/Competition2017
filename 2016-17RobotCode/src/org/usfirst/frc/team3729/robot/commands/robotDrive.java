@@ -22,6 +22,7 @@ public class robotDrive {
 	boolean isRight;
 	double motorLimiterRatioinital = 0.8;
 	double motorLimiterRatio = motorLimiterRatioinital;
+	Calendar cal;
 	double deadZone = 0.2;
 	double leftMotorInput = 1;
 	double rightMotorInput = 1;
@@ -176,32 +177,37 @@ public class robotDrive {
 		}
 	}
 
+	public void autoDrive(double speed){
+		double angle = gyro.getAngle();
+		driveStraight( speed, angle);
+	}
 	private void driveStraight(double speed, double currentHeading) {
 
-		// double angle = gyro.getAngle();
-		//
-		// if (angle >= currentHeading + .05) {
-		//
-		// RightMotorFront.set(speed);
-		// LeftMotorFront.set(-speed * .75);
-		// RightMotorBack.set(speed);
-		// LeftMotorBack.set(-speed * .75);
-		// System.out.println("right");
-		//
-		// } else if (angle <= currentHeading - .05) {
-		// System.out.println("left");
-		// RightMotorFront.set(speed * .75);
-		// LeftMotorFront.set(-speed);
-		// RightMotorBack.set(speed * .75);
-		// LeftMotorBack.set(-speed);
-		//
-		// } else {
-		// System.out.println("straight");
-		// RightMotorFront.set(speed);
-		// LeftMotorFront.set(-speed);
-		// RightMotorBack.set(speed);
-		// LeftMotorBack.set(-speed);
-		// }
+		 double angle = gyro.getAngle();
+		
+		 if (angle >= currentHeading + .05) {
+		
+		 RightMotorFront.set(speed);
+		 LeftMotorFront.set(-speed * .75);
+		 RightMotorBack.set(speed);
+		 LeftMotorBack.set(-speed * .75);
+		 System.out.println("right");
+		
+		 } else if (angle <= currentHeading - .05) {
+		 System.out.println("left");
+		 RightMotorFront.set(speed * .75);
+		 LeftMotorFront.set(-speed);
+		 RightMotorBack.set(speed * .75);
+		 LeftMotorBack.set(-speed);
+		
+		 } else {
+		 System.out.println("straight");
+		 RightMotorFront.set(speed);
+		 LeftMotorFront.set(-speed);
+		 RightMotorBack.set(speed);
+		 LeftMotorBack.set(-speed);
+		 }
+		;
 	}
 
 	// AUTONOMOUS STUFF
@@ -221,33 +227,8 @@ public class robotDrive {
 	// // rightMotorInput = -turnInput;
 	// // System.out.println("spin right")
 	// }
-
-	public void Autonomous() {
-		RightMotorFront.set(rightMotorInput * motorLimiterRatio);
-		LeftMotorFront.set(-leftMotorInput * motorLimiterRatio);
-		RightMotorBack.set(rightMotorInput * motorLimiterRatio);
-		LeftMotorBack.set(-leftMotorInput * motorLimiterRatio);
-		Timer.delay(2);
-		Stop();
-	}
 	
-	
-	public void StopAutonomous() {
-		if (driverStation.isAutonomous()) {
-			this.Stop();
-		}
-	}
 
-	public void Stop() {
-		LeftMotorFront.set(-.2);
-		LeftMotorBack.set(-.2);
-		RightMotorFront.set(-.2);
-		RightMotorBack.set(-.2);
-		Timer.delay(.1);
-		LeftMotorFront.set(0);
-		LeftMotorBack.set(0);
-		RightMotorFront.set(0);
-		RightMotorBack.set(0);
-	}
+	
 
 }
