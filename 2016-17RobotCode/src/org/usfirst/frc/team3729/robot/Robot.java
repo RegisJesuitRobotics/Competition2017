@@ -35,7 +35,7 @@ public class Robot extends IterativeRobot {
 //	final String autonomousPath6 = "RED - RIGHT";
 	String autoSelected;
 	boolean automove;
-	int seconds;
+	int seconds, cp;
 
 	robotDrive drive;
 	SendableChooser chooser;
@@ -94,6 +94,7 @@ public class Robot extends IterativeRobot {
 		// System.out.println("Auto selected: " + autoSelected);
 		autoSelected = (String) chooser.getSelected();
 		seconds = 0;
+		int cp = 0;
 		// gyro.calibrate();
 		// gyro.reset();
 	}
@@ -108,11 +109,10 @@ public class Robot extends IterativeRobot {
 
 		case autonomousPath1: // BLUE - LEFT
 			if (automove == true) {
-
-				while (seconds >= 10) {
-					drive.autoDrive(0.7);
-
-					seconds++;
+         gyro.reset();
+         while (cp <= 10) {
+					drive.autoDrive(0.5);
+                    cp++;
 					Timer.delay(1);
 				}
 			}
