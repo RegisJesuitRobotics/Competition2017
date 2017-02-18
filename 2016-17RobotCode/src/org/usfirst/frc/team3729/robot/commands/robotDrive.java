@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.*;
+
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,6 +22,7 @@ public class robotDrive {
 	boolean isRight;
 	double motorLimiterRatioinital = 0.8;
 	double motorLimiterRatio = motorLimiterRatioinital;
+	Calendar cal;
 	double deadZone = 0.2;
 	double leftMotorInput = 1;
 	double rightMotorInput = 1;
@@ -68,16 +71,16 @@ public class robotDrive {
 		
 		/* This limits the power of the motor, it is a percentage
 		// This SHOULD NOT go above 1.0, not should it be negative
-		double motorLimiterRatioinital = 0.5; // change to
+		double motorLimiterRatioinital = 0.5; // change to change speed
 		double motorLimiterRatio = motorLimiterRatioinital;
-		double forwardInput = _xbox.GetForwardInput();
-		double turnInput = _xbox.GetTurnInput();
+		double forwardInput = _xbox.GetLeftStick();
+		double turnInput = _xbox.GetRightStick();
 		double leftMotorInput = 0;
 		double rightMotorInput = 0;
 		double deadZone = 0.2;
 
-		// System.out.println(forwardInput);
-		// System.out.println(turnInput + "turn");
+		System.out.println(forwardInput);
+		System.out.println(turnInput + "turn");
 
 		if (forwardInput > deadZone && turnInput > deadZone) {
 			leftMotorInput = forwardInput * 1.5;
@@ -111,7 +114,7 @@ public class robotDrive {
 		} else if (forwardInput < -deadZone && turnInput < -deadZone) {
 			leftMotorInput = -turnInput * .1;
 			rightMotorInput = forwardInput * 1.25;
-			System.out.println("turn backwards left"); 
+			System.out.println("turn backwards left");
 			// Turn Backwards Left
 		} else if (forwardInput < -deadZone && turnInput > deadZone) {
 			leftMotorInput = forwardInput * 1.25;
@@ -126,8 +129,12 @@ public class robotDrive {
 		}
 		// Speed Switch
 		if (_xbox.GetRightTrigger() > deadZone) {
+<<<<<<< HEAD
 			motorLimiterRatio = 0.7;
 					//(_xbox.GetRightTrigger() * 0.5);
+=======
+			motorLimiterRatio = 0.8;
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 		} else {
 			motorLimiterRatio = motorLimiterRatioinital;
 		}
@@ -135,9 +142,15 @@ public class robotDrive {
 		LeftMotorFront.set(-leftMotorInput * motorLimiterRatio);
 		RightMotorBack.set(rightMotorInput * motorLimiterRatio);
 		LeftMotorBack.set(-leftMotorInput * motorLimiterRatio);
+<<<<<<< HEAD
 		// System.out.println(leftMotorInput + "left");
 		// System.out.println(rightMotorInput + "right");
 		*/
+=======
+		System.out.println(leftMotorInput + "left");
+		System.out.println(rightMotorInput + "right");
+
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 	}
 
 	
@@ -172,38 +185,48 @@ public class robotDrive {
 
 	private void strafeStraight(double currentHeading, boolean isRight) {
 		double direction;
+		double antiWheelLockR, antiWheelLockL;
 		double angle = gyro.getAngle();
 		if (isRight == true) {
 			direction = 1;
+			antiWheelLockR = 0;
+			antiWheelLockL = 1;
 		} else {
 			direction = -1;
+			antiWheelLockR = 1;
+			antiWheelLockL = 0;
 		}
 
 		if (angle >= currentHeading + .05) {
-			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * .80 * direction);
-			RightMotorBack.set(rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * .75 * direction);
-			System.out.println("right");
-		} else if (angle <= currentHeading - .05) {
-			System.out.println("left");
-			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * .80 * direction);
-			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction);
-			RightMotorBack.set(rightMotorInput * motorLimiterRatio * .75 * direction);
+			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * 2 * direction * antiWheelLockR);
+			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction * antiWheelLockL);
+			RightMotorBack.set(rightMotorInput * motorLimiterRatio * 2 * direction);
 			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * direction);
+			System.out.println("right");
+
+		} else if (angle <= currentHeading - .05) {
+			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction * antiWheelLockR);
+			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * 2 * direction * antiWheelLockL);
+			RightMotorBack.set(rightMotorInput * motorLimiterRatio * direction);
+			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * 2 * direction);
+			System.out.println("left");
+
 		} else {
 			System.out.println("straight");
-			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction);
+			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction * antiWheelLockR);
+			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction * antiWheelLockL);
 			RightMotorBack.set(rightMotorInput * motorLimiterRatio * direction);
 			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * direction);
 		}
 	}
 
+	public void autoDrive(double speed){
+		double angle = gyro.getAngle();
+		driveStraight( speed, angle);
+	}
 	private void driveStraight(double speed, double currentHeading) {
 
-		double angle = gyro.getAngle();
-
+<<<<<<< HEAD
 		if (angle >= currentHeading + .05) {
 
 			RightMotorFront.set(speed);
@@ -226,6 +249,33 @@ public class robotDrive {
 			RightMotorBack.set(speed);
 			LeftMotorBack.set(-speed);
 		}
+=======
+		 double angle = gyro.getAngle();
+		
+		 if (angle >= currentHeading + .05) {
+		
+		 RightMotorFront.set(speed);
+		 LeftMotorFront.set(-speed * .75);
+		 RightMotorBack.set(speed);
+		 LeftMotorBack.set(-speed * .75);
+		 System.out.println("right");
+		
+		 } else if (angle <= currentHeading - .05) {
+		 System.out.println("left");
+		 RightMotorFront.set(speed * .75);
+		 LeftMotorFront.set(-speed);
+		 RightMotorBack.set(speed * .75);
+		 LeftMotorBack.set(-speed);
+		
+		 } else {
+		 System.out.println("straight");
+		 RightMotorFront.set(speed);
+		 LeftMotorFront.set(-speed);
+		 RightMotorBack.set(speed);
+		 LeftMotorBack.set(-speed);
+		 }
+		;
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 	}
 
 	// AUTONOMOUS STUFF
@@ -233,6 +283,7 @@ public class robotDrive {
 	// WORDS
 	// TEXT
 
+<<<<<<< HEAD
 	public void TurnAround() {
 		gyro.reset();
 		do {
@@ -263,5 +314,22 @@ public class robotDrive {
 		RightMotorFront.set(0);
 		RightMotorBack.set(0);
 	}
+=======
+	// public void TurnAround() {
+	// gyro.reset();
+	// do {
+	// LeftMotorFront.set(.5);
+	// LeftMotorBack.set(.5);
+	// RightMotorFront.set(-.5);
+	// RightMotorBack.set(.5);
+	// } while (gyro.getAngle() <= 180 && driverStation.isAutonomous() == true);
+	// // leftMotorInput = turnInput;
+	// // rightMotorInput = -turnInput;
+	// // System.out.println("spin right")
+	// }
+	
+
+	
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 
 }

@@ -5,11 +5,16 @@ import org.usfirst.frc.team3729.robot.commands.XboxControler;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.tables.ITable;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,44 +27,52 @@ public class Robot extends IterativeRobot {
 	ADXRS450_Gyro gyro;
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
-	final String autonomousPath1 = "Autonomous Path High Center Goal";
-	final String autonomousPath2 = "Autonomous Path High Left Goal";
-	final String autonomousPath3 = "Autonomous Path Defense Driveover";
+	final String autonomousPath1 = "Just go straight then stop.";
+//	final String autonomousPath2 = "BLUE - MIDDLE";
+//	final String autonomousPath3 = "BLUE - RIGHT";
+//	final String autonomousPath4 = "RED - LEFT";
+//	final String autonomousPath5 = "RED - MIDDLE";
+//	final String autonomousPath6 = "RED - RIGHT";
 	String autoSelected;
 	boolean automove;
+	int seconds;
+
 	robotDrive drive;
 	SendableChooser chooser;
 	XboxControler xbox;
 	modularPeripheries periphery;
 
-	// USBCamera cam;
+	// UsbCamera cam;
 
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public void robotInit() {
-		// chooser = new SendableChooser();
-		// chooser.addDefault("Default Auto", defaultAuto);
-		// chooser.addObject("My Auto", customAuto);
-		// SmartDashboard.putData("Auto choices", chooser);
+
 		xbox = new XboxControler(0);
 		drive = new robotDrive(xbox);
 		periphery = new modularPeripheries(xbox);
+
 		gyro = new ADXRS450_Gyro();
-		// cam = new USBCamera();
+
+		// cam = CameraServer.getInstance().startAutomaticCapture();
+
+		gyro.calibrate();
+		gyro.reset();
 
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("Autonomous Path High Center Goal", autonomousPath1);
-		chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
-		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
+//		chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
+//		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
+//		chooser.addObject("Autonomous Path High Center Goal", autonomousPath4);
+//		chooser.addObject("Autonomous Path High Left Goal", autonomousPath5);
+//		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath6);
 		SmartDashboard.putData("Auto choices", chooser);
 
-
-		gyro.calibrate();
-		gyro.reset();
 	}
 
 	/**
@@ -80,9 +93,9 @@ public class Robot extends IterativeRobot {
 		// defaultAuto);
 		// System.out.println("Auto selected: " + autoSelected);
 		autoSelected = (String) chooser.getSelected();
-
-		gyro.calibrate();
-		gyro.reset();
+		seconds = 0;
+		// gyro.calibrate();
+		// gyro.reset();
 	}
 
 	/**
@@ -90,50 +103,72 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-
+		automove = true;
 		switch (autoSelected) {
-		case autonomousPath1:
-			if (automove == true) {
-				automove = false;
-			}
-			break;
 
-		case autonomousPath2:
-			if (automove == true) {
-				automove = false;
-			}
-			break;
-
-		case autonomousPath3:
+		case autonomousPath1: // BLUE - LEFT
 			if (automove == true) {
 
-				automove = false;
-			}
-			break;
-		case defaultAuto:
-		default:
-			if (automove == true) {
+				while (seconds >= 10) {
+					drive.autoDrive(0.7);
 
-				automove = false;
+					seconds++;
+					Timer.delay(1);
+				}
 			}
-			break;
-		}
 
-		// switch (autoSelected) {
-		// case customAuto:
-		// Put custom auto code here
-		// break;+
-		// case defaultAuto:
-		// default:
-		// Talon RightMotor, LeftMotor;
+			automove = false;
+		
+		break;
+		// case autonomousPath2: // BLUE - MIDDLE
+		// if(automove==true)
 		//
-		// RightMotor = new Talon(1);
-		// LeftMotor = new Talon(2);
+		// {
+		// automove = false;
+		// }break;
 		//
-		// RightMotor.set(.5);
-		// LeftMotor.set(.5);
-		// break;
-		// }
+		// case autonomousPath3: // BLUE - RIGHT
+		// if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }case autonomousPath4: // RED - LEFT
+		// if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }case autonomousPath5:// RED - MIDDLE
+		// if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }case autonomousPath6: // RED - RIGHT
+		// if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }break;case defaultAuto:default:if(automove==true)
+		// {
+		//
+		// automove = false;
+		// }break;
+	}
+
+	// switch (autoSelected) {
+	// case customAuto:
+	// Put custom auto code here
+	// break;+
+	// case defaultAuto:
+	// default:
+	// Talon RightMotor, LeftMotor;
+	//
+	// RightMotor = new Talon(1);
+	// LeftMotor = new Talon(2);
+	//
+	// RightMotor.set(.5);
+	// LeftMotor.set(.5);
+	// break;
+	// }
 	}
 
 	/**
@@ -143,19 +178,28 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		// DRIVING DOODLE
 		drive.arcadeDrive();
+<<<<<<< HEAD
 		periphery.shooter();
 		periphery.climber();
 		//drive.mechenumDrive();
 
 		// EATING DOODLE
 		periphery.onOffEatingFeeding();
+=======
+		// drive.mechenumDrive();
 
-		// LOADING DOODLE
-		// periphery.conscousLoading();
+		// EATING DOODLE
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 
-		// SHOOTING DOODLE
-		// periphery.shootButton();
-		// SEEING DOODLE
+		periphery.climbingKiddo();
+		periphery.shootButton();
+		periphery.LoadingKiddo();
+		periphery.Noms();
+
+		// table = NetworkTable.getTable("");
+		// stuff = table.getSubTable("SmartDashboard");
+		// double area = stuff.getNumber("COG_AREA",0.0);
+		// System.out.println("Area "+ area);
 
 	}
 
