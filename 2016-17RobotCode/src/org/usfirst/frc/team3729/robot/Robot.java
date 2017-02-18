@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
 	//final String autonomousPath3 = "Autonomous Path Defense Driveover";
 	String autoSelected;
 	boolean automove;
-	int seconds;
+	int seconds = 10;
 	
 	robotDrive drive;
 	SendableChooser chooser;
