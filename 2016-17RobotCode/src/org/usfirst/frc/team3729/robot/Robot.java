@@ -178,9 +178,18 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		// DRIVING DOODLE
 		drive.arcadeDrive();
+<<<<<<< HEAD
+		periphery.shooter();
+		periphery.climber();
+		//drive.mechenumDrive();
+
+		// EATING DOODLE
+		periphery.onOffEatingFeeding();
+=======
 		// drive.mechenumDrive();
 
 		// EATING DOODLE
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 
 		periphery.climbingKiddo();
 		periphery.shootButton();
