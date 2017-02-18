@@ -8,6 +8,7 @@ import org.usfirst.frc.team3729.robot.commands.robotDrive;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,11 +23,13 @@ public class Robot extends IterativeRobot {
 	ADXRS450_Gyro gyro;
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
-	final String autonomousPath1 = "Autonomous Path High Center Goal";
-	final String autonomousPath2 = "Autonomous Path High Left Goal";
-	final String autonomousPath3 = "Autonomous Path Defense Driveover";
+	final String autonomousPath1 = "Go Straight for ??? seconds";
+	//final String autonomousPath2 = "Autonomous Path High Left Goal";
+	//final String autonomousPath3 = "Autonomous Path Defense Driveover";
 	String autoSelected;
 	boolean automove;
+	int seconds;
+	
 	robotDrive drive;
 	SendableChooser chooser;
 	XboxControler xbox;
@@ -53,8 +56,8 @@ public class Robot extends IterativeRobot {
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("Autonomous Path High Center Goal", autonomousPath1);
-		chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
-		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
+		//chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
+		//chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
 		SmartDashboard.putData("Auto choices", chooser);
 
 
@@ -90,8 +93,24 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-
+		automove = true;
 		switch (autoSelected) {
+
+		case autonomousPath1: // BLUE - LEFT
+			if (automove == true) {
+
+				while (seconds >= 10) {
+					drive.autoDrive(0.3);
+
+					seconds++;
+					Timer.delay(1);
+				}
+			}
+
+			automove = false;
+		
+		break;
+		/*switch (autoSelected) {
 		case autonomousPath1:
 			if (automove == true) {
 				automove = false;
@@ -116,7 +135,7 @@ public class Robot extends IterativeRobot {
 
 				automove = false;
 			}
-			break;
+			break;*/
 		}
 
 		// switch (autoSelected) {

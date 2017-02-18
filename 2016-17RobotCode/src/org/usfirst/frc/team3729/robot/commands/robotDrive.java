@@ -232,6 +232,10 @@ public class robotDrive {
 	// IMPORTANT
 	// WORDS
 	// TEXT
+	public void autoDrive(double speed){
+		double angle = gyro.getAngle();
+		driveStraight( speed, angle);
+	}
 
 	public void TurnAround() {
 		gyro.reset();

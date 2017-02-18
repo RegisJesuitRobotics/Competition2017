@@ -100,9 +100,9 @@ public class modularPeripheries {
 			ShootyMotor2.set(0);
 		}
 		
-		if (leftBumper == true){
+		/*if (leftBumper == true){
 			shoot = shoot + 0.05;
-			System.out.println(shoot);
+			System.out.println(shoot);*/
 		}
 		
 	}
@@ -136,5 +136,4 @@ public class modularPeripheries {
 	// // System.out.println("elf");
 	// }
 	// }
-
-}
+	
