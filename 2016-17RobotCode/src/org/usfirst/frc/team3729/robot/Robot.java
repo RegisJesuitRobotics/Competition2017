@@ -23,12 +23,12 @@ public class Robot extends IterativeRobot {
 	ADXRS450_Gyro gyro;
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
-	final String autonomousPath1 = "Go Straight for ??? seconds";
-	//final String autonomousPath2 = "Autonomous Path High Left Goal";
+	final String autonomousPath1 = "Go Straight for 5 seconds";
+	//final String autonomousPath2 = "Go straight and turn";
 	//final String autonomousPath3 = "Autonomous Path Defense Driveover";
 	String autoSelected;
 	boolean automove;
-	int seconds = 10;
+	int seconds = 5;
 	
 	robotDrive drive;
 	SendableChooser chooser;
@@ -94,17 +94,18 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		automove = true;
+		
+		while (seconds >= 0) {
+			drive.autoDrive(0.3);
+			seconds--;
+			Timer.delay(1);
+		}
+		
 		switch (autoSelected) {
 
 		case autonomousPath1: // BLUE - LEFT
 			if (automove == true) {
-
-				while (seconds >= 10) {
-					drive.autoDrive(0.3);
-
-					seconds++;
-					Timer.delay(1);
-				}
+				
 			}
 
 			automove = false;
