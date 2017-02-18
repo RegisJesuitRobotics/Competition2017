@@ -5,48 +5,106 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Relay;
 
 public class modularPeripheries {
-	Relay EatMotor1;
-	CANTalon ShootyMotor1, ShootyMotor2, LoadMotor;
+	Relay feedMotor1;
+	CANTalon ShootyMotor1, ShootyMotor2, eatMotor , climberMotor;
 	XboxControler _xbox;
-	boolean eatIsRunning = false;
+	boolean feedIsRunning = false;
+	boolean	eatIsRunning = false;
 
 	public modularPeripheries(XboxControler xbox) {
-		EatMotor1 = new Relay(0);
-		// LoadMotor = new CANTalon(9);
-		// ShootyMotor1 = new CANTalon(7);
-		// ShootyMotor2 = new CANTalon(8);
+		feedMotor1 = new Relay(0);
+		 eatMotor = new CANTalon(8);
+		 ShootyMotor1 = new CANTalon(5);
+		 ShootyMotor2 = new CANTalon(6);
+		 climberMotor = new CANTalon(7);
 		this._xbox = xbox;
 	}
 
 	// EATING DOODLES
-	public void onOffEating() {
+	public void onOffEatingFeeding() {
 		// Push X to START
 		// Push Y to STOP
 
-		if (_xbox.GetA() == true) {
+		if (_xbox.ButtonA() == true) {
 
+			eatIsRunning = true;
 			System.out.println("A");
 
 		}
-		if (_xbox.GetX() == true) {
-			eatIsRunning = true;
+		
+		if (_xbox.ButtonY() == true) {
+
+			eatIsRunning = false;
+			System.out.println("BA");
+
+		}
+		
+		if (_xbox.ButtonX() == true) {
+			feedIsRunning = true;
 			System.out.println("IsRunning");
 
 		}
-		if (_xbox.GetB() == true) {
-			eatIsRunning = false;
+		if (_xbox.ButtonB() == true) {
+			feedIsRunning = false;
 			System.out.println("IsntRunning");
 		}
 		// The motor setting thing
 		// git good
-		if (eatIsRunning == false) {
-			EatMotor1.set(Relay.Value.kOff);
+		if (feedIsRunning == false) {
+			feedMotor1.set(Relay.Value.kOff);
 		}
 
-		else if (eatIsRunning == true) {
-			EatMotor1.set(Relay.Value.kReverse);
+		else if (feedIsRunning == true) {
+			feedMotor1.set(Relay.Value.kReverse);
 
 		}
+		
+		if (eatIsRunning==true) {
+			
+			eatMotor.set(-.7);
+			
+		}
+		
+		else if (eatIsRunning==false) {
+			
+			eatMotor.set(0);
+			
+		}
+	}
+	
+	public void climber(){
+		
+		if (_xbox.LeftBumper() == true) {
+			
+			climberMotor.set(-1);
+		}
+		
+		else{
+			climberMotor.set(0);
+		}
+	}
+	
+	public void shooter() {
+		boolean leftBumper = _xbox.LeftBumper();
+		boolean rightBumper = _xbox.RightBumper();
+		double shoot = -1;
+		if (rightBumper == true) {
+	
+			ShootyMotor1.set(-.95);
+			ShootyMotor2.set(-.95);
+			
+		}
+		
+		else {
+			ShootyMotor1.set(0);
+			ShootyMotor2.set(0);
+		}
+		
+		if (leftBumper == true){
+			shoot = shoot + 0.05;
+			System.out.println(shoot);
+		}
+		
 	}
 
 	// LOADING DOODLES

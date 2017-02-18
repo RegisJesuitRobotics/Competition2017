@@ -29,14 +29,44 @@ public class robotDrive {
 		RightMotorFront = new CANTalon(3);
 		LeftMotorBack = new CANTalon(1);
 		LeftMotorFront = new CANTalon(2);
+
 		gyro = new ADXRS450_Gyro();
 		this._xbox = xbox;
-
+	
 	}
 
 	public void arcadeDrive() {
-
-		// This limits the power of the motor, it is a percentage
+		double RT = _xbox.RightTrigger();
+		double LT = _xbox.LeftTrigger();
+		double RS = _xbox.RightStickX();
+		double deadzone = 0.1;
+		double rPower;
+		double lPower;
+		double Power;
+		double turn = 2*RS;
+		
+		Power = RT - LT;
+		if(RS>deadzone)
+		{
+			rPower = Power - (turn*Power);
+			lPower = Power;
+		}
+		else if(RS<-deadzone)
+		{
+			lPower = Power + (turn*Power);
+			rPower = Power;
+		}
+		else
+		{
+			rPower = Power;
+			lPower = Power;
+		}
+		RightMotorFront.set(rPower);
+		LeftMotorFront.set(-lPower);
+		RightMotorBack.set(rPower);
+		LeftMotorBack.set(-lPower);
+		
+		/* This limits the power of the motor, it is a percentage
 		// This SHOULD NOT go above 1.0, not should it be negative
 		double motorLimiterRatioinital = 0.5; // change to
 		double motorLimiterRatio = motorLimiterRatioinital;
@@ -96,7 +126,7 @@ public class robotDrive {
 		}
 		// Speed Switch
 		if (_xbox.GetRightTrigger() > deadZone) {
-			motorLimiterRatio =  0.8;
+			motorLimiterRatio = 0.7;
 					//(_xbox.GetRightTrigger() * 0.5);
 		} else {
 			motorLimiterRatio = motorLimiterRatioinital;
@@ -107,19 +137,20 @@ public class robotDrive {
 		LeftMotorBack.set(-leftMotorInput * motorLimiterRatio);
 		// System.out.println(leftMotorInput + "left");
 		// System.out.println(rightMotorInput + "right");
-
+		*/
 	}
 
+	
 	public void mechenumDrive() {
-		boolean leftBumper = _xbox.GetLeftBumper();
-		boolean rightBumper = _xbox.GetRightBumper();
+		boolean leftBumper = _xbox.LeftBumper();
+		boolean rightBumper = _xbox.RightBumper();
 		double angle;
 
 		// Maybe lower this
 		double motorLimiterRatioinital = 0.8;
 
 		// speed button
-		if (_xbox.GetRightTrigger() > deadZone) {
+		if (_xbox.RightTrigger() > deadZone) {
 			motorLimiterRatio = 0.4;
 		} else {
 			motorLimiterRatio = motorLimiterRatioinital;
@@ -137,6 +168,7 @@ public class robotDrive {
 		}
 
 	}
+
 
 	private void strafeStraight(double currentHeading, boolean isRight) {
 		double direction;
@@ -182,7 +214,7 @@ public class robotDrive {
 
 		} else if (angle <= currentHeading - .05) {
 			System.out.println("left");
-			RightMotorFront.set(speed * .75);
+		 	RightMotorFront.set(speed * .75);
 			LeftMotorFront.set(-speed);
 			RightMotorBack.set(speed * .75);
 			LeftMotorBack.set(-speed);
@@ -212,7 +244,7 @@ public class robotDrive {
 		// leftMotorInput = turnInput;
 		// rightMotorInput = -turnInput;
 		// System.out.println("spin right")
-	}
+}
 
 	public void StopAutonomous() {
 		if (driverStation.isAutonomous()) {

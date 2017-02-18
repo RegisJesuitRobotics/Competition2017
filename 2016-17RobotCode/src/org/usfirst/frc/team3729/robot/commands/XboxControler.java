@@ -7,8 +7,8 @@ public class XboxControler extends Joystick {
 		super(port);
 	}
 
-	public double GetForwardInput() {
-		return -super.getRawAxis(1);
+	public double RightStickX() {
+		return super.getRawAxis(4);
 	}
 
 	/**
@@ -16,50 +16,54 @@ public class XboxControler extends Joystick {
 	 * 
 	 * @return
 	 */
-	public double GetTurnInput() {
-		return super.getRawAxis(4);
+	public double LeftTrigger() {
+		return super.getRawAxis(2);
 	}
-
-	public double GetRightTrigger() {
+	
+	public double RightTrigger() {
 
 		return super.getRawAxis(3);
 	}
-
-	public boolean GetA() {
-		return super.getRawButton(0);
+	
+	public double LeftStick() {
+		return super.getRawAxis(4);
 	}
 
-	public boolean GetX() {
-		return super.getRawButton(3);
-	}
+	
 
-	public boolean GetB() {
+	public boolean ButtonA() {
 		return super.getRawButton(2);
 	}
-
-	public boolean GetY() {
+	
+	public boolean ButtonY() {
+		return super.getRawButton(4);
+	}
+	
+	public boolean ButtonB() {
+		return super.getRawButton(3);
+	}
+	
+	public boolean ButtonX() {
 		return super.getRawButton(1);
 	}
 
-	public boolean GetLeftBumper() {
+	public boolean LeftBumper() {
 		return super.getRawButton(5);
 	}
 
-	public boolean GetRightBumper() {
+	public boolean RightBumper() {
 		return super.getRawButton(6);
 	}
 
-	public boolean GetBack() {
+	public boolean ButtonBack() {
 		return super.getRawButton(7);
 	}
 
-	public boolean GetStart() {
+	public boolean ButtonStart() {
 		return super.getRawButton(8);
 	}
 
-	public double GetLeftTrigger() {
-		return super.getRawAxis(2);
-	}
+	
 
 	public double GetPOV() {
 		if ((super.getPOV(0) > 0) && (super.getPOV(0) < 180)) {
