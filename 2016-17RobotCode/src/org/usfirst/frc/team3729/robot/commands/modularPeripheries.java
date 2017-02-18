@@ -27,11 +27,6 @@ public class modularPeripheries {
 	//B LOAD
 	//A EAT
 	
-	
-
-	
-	
-
 	public void shootButton() {
 		if (_xbox.GetX() == true) {
 			ShootyMotor1.set(-0.5);

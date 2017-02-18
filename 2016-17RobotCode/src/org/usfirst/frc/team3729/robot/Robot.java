@@ -157,7 +157,7 @@ public class Robot extends IterativeRobot {
 	// switch (autoSelected) {
 	// case customAuto:
 	// Put custom auto code here
-	// break;+
+	// break;
 	// case defaultAuto:
 	// default:
 	// Talon RightMotor, LeftMotor;

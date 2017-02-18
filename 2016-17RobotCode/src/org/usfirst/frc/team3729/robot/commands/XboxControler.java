@@ -10,7 +10,6 @@ public class XboxControler extends Joystick {
 	public double GetLeftStick() {
 		return -super.getRawAxis(1);
 	}
-
 	/**
 	 * Returns left or right. Left is negative, right is positive.
 	 * 

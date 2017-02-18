@@ -227,8 +227,4 @@ public class robotDrive {
 	// // rightMotorInput = -turnInput;
 	// // System.out.println("spin right")
 	// }
-	
-
-	
-
 }
