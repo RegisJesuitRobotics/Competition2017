@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Ck {
 	Relay clipMotor;
@@ -12,6 +13,7 @@ public class Ck {
 	PlayStationController playStation;
 	DriverStation driverStation;
 	ADXRS450_Gyro gyro;
+	boolean shootSequence = false;
 	double deadZone = 0.2;
 	double leftMotorInput = 1;
 	double rightMotorInput = 1;
@@ -35,7 +37,7 @@ public Ck(PlayStationController playStation) {
 		double R2 = playStation.L2Axis();
 		double L2 = playStation.L2Axis();
 		double LeftStick = playStation.LeftStickXAxis();
-		double Deadzone = 0.01;
+		double Deadzone = 0.1;
 		double RightPower;
 		double LeftPower;
 		double Power;
@@ -67,7 +69,7 @@ public Ck(PlayStationController playStation) {
 		else{intakeMotor.set(0);}
 		//clip
 		if(playStation.ButtonSquare() == true)
-		{clipMotor.set(Relay.Value.kForward); }
+		{clipMotor.set(Relay.Value.kReverse); }
 		else {clipMotor.set(Relay.Value.kOff);}
 		//shooter
 		if(playStation.ButtonTriangle()== true)
@@ -83,14 +85,14 @@ public Ck(PlayStationController playStation) {
 		if(playStation.ButtonX() == true)
 		{shooterMotor1.set(-0.95);
 		shooterMotor2.set(-0.95);
-		Thread thread3 = new Thread(new Runnable(){
-			@Override
-			public void run(){
-				Thread.sleep(2000);
-			clipMotor.set(Relay.Value.kOn);
-			}
-		},"Thread 3");
-		thread3.start();
-	}
+		if(shootSequence = false)
+		{Timer.delay(2);
+		shootSequence = true;}
+		clipMotor.set(Relay.Value.kReverse);}
+		else{shootSequence = false;
+		shooterMotor1.set(0);
+		shooterMotor2.set(0);
+		clipMotor.set(Relay.Value.kOff);
+		}
 	}	 
 }
