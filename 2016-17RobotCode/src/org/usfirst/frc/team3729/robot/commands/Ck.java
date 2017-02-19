@@ -36,7 +36,7 @@ public class Ck {
 
 	public void CkDrive() {
 
-		double R2 = playStation.LeftTrigger();
+		double R2 = playStation.RightTrigger();
 		double L2 = playStation.LeftTrigger();
 		double LeftStick = playStation.LeftStickXAxis();
 		double Deadzone = 0.1;

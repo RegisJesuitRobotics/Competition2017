@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		playStation = new PlayStationController(0);
-		drive = new robotDrive(playStation);
+		//drive = new robotDrive(playStation);
 		//periphery = new modularPeripheries(playStation);
 		//gyro = new ADXRS450_Gyro();
 		ck = new Ck(playStation);
