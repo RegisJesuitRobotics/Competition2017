@@ -98,7 +98,7 @@ public class Ck {
 			Thread thread3 = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					Thread.sleep(2000);
+					//Thread.sleep(2000);
 					clipMotor.set(Relay.Value.kOn);
 				}
 			}, "Thread 3");
