@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
 	//final String autonomousPath3 = "Autonomous Path Defense Driveover";
 	String autoSelected;
 	boolean automove;
-	int seconds = 5;
+	double seconds = 10.0;
 	
 	robotDrive drive;
 	SendableChooser chooser;
@@ -91,13 +91,18 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during autonomous
 	 */
-	@Override
-	public void autonomousPeriodic() {
+	//@Override
+	
+	
+	
+	
+	
+	/*public void autonomousPeriodic() {
 		automove = true;
 		
-		while (seconds >= 0) {
-			drive.autoDrive(0.3);
-			seconds--;
+		while (seconds >= 5) {
+			drive.autoDrive(0.5);
+			seconds = seconds - 1;
 			Timer.delay(1);
 		}
 		
@@ -137,7 +142,10 @@ public class Robot extends IterativeRobot {
 				automove = false;
 			}
 			break;*/
-		}
+		
+		
+		
+		
 
 		// switch (autoSelected) {
 		// case customAuto:
@@ -154,7 +162,7 @@ public class Robot extends IterativeRobot {
 		// LeftMotor.set(.5);
 		// break;
 		// }
-	}
+		
 
 	/**
 	 * This function is called periodically during operator control
