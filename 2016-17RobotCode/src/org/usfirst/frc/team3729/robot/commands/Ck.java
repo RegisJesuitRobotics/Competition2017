@@ -5,6 +5,7 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Ck {
 	Relay clipMotor;
@@ -13,6 +14,7 @@ public class Ck {
 	PlayStationController playStation;
 	DriverStation driverStation;
 	ADXRS450_Gyro gyro;
+	boolean shootSequence = false;
 	double deadZone = 0.2;
 	double leftMotorInput = 1;
 	double rightMotorInput = 1;
@@ -37,7 +39,7 @@ public class Ck {
 		double R2 = playStation.LeftTrigger();
 		double L2 = playStation.LeftTrigger();
 		double LeftStick = playStation.LeftStickXAxis();
-		double Deadzone = 0.01;
+		double Deadzone = 0.1;
 		double RightPower;
 		double LeftPower;
 		double Power;
