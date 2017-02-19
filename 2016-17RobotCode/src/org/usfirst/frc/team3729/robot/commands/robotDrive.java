@@ -16,7 +16,7 @@ public class robotDrive {
 	CANTalon RightMotorFront, LeftMotorFront, RightMotorBack, LeftMotorBack;
 	PlayStationController playStation;
 	DriverStation driverStation;
-	ADXRS450_Gyro gyro;
+	// ADXRS450_Gyro gyro;
 	boolean isRight;
 	double motorLimiterRatioinital = 0.8;
 	double motorLimiterRatio = motorLimiterRatioinital;
@@ -32,12 +32,13 @@ public class robotDrive {
 		LeftMotorBack = new CANTalon(1);
 		LeftMotorFront = new CANTalon(2);
 
-		gyro = new ADXRS450_Gyro();
+		// gyro = new ADXRS450_Gyro();
 		this.playStation = playStation;
 	}
 
 	public void arcadeDrive() {
 
+		System.out.println("Garrison Test");
 		double rightTrigger = playStation.RightTrigger();
 		double leftTrigger = playStation.LeftTrigger();
 		double RightStick = playStation.RightStickXAxis();
@@ -48,25 +49,26 @@ public class robotDrive {
 
 		// LOGIC
 		Power = rightTrigger - leftTrigger;
-//		if (RightStick > deadZone) {
-//
-//			RightPower = Power - (turn * Power);
-//			LeftPower = Power;
-//		} else if (RightStick < -deadZone) {
-//
-//			LeftPower = Power + (turn * Power);
-//			RightPower = Power;
-//		} else {
-//			LeftPower = Power;
-//			RightPower = Power;
-//		}
+		System.out.println("power:" + Power);
+		// if (RightStick > deadZone) {
+		//
+		// RightPower = Power - (turn * Power);
+		// LeftPower = Power;
+		// } else if (RightStick < -deadZone) {
+		//
+		// LeftPower = Power + (turn * Power);
+		// RightPower = Power;
+		// } else {
+		// LeftPower = Power;
+		// RightPower = Power;
+		// }
 		// MOTOR SETTING
 
-//		RightMotorFront.set(RightPower);
-//		RightMotorBack.set(RightPower);
-//		LeftMotorFront.set(-LeftPower);
-//		LeftMotorBack.set(-LeftPower);
-		
+		// RightMotorFront.set(RightPower);
+		// RightMotorBack.set(RightPower);
+		// LeftMotorFront.set(-LeftPower);
+		// LeftMotorBack.set(-LeftPower);
+
 		DriveRobot(Power, RightStick);
 	}
 
@@ -77,24 +79,24 @@ public class robotDrive {
 		if (turnInput > deadZone || turnInput < -deadZone || power > deadZone || power < -deadZone) {
 			if (power > deadZone && turnInput > deadZone) {
 				leftMotorInput = power;
-				rightMotorInput = power * insideTurnSpeedReduction * -turnInput;
+				rightMotorInput = power * insideTurnSpeedReduction * turnInput;
 				System.out.println("turn forward right");
 				// Turn Forward Right
 			} else if (turnInput > deadZone && IsValueInDeadZone(power)) {
 				leftMotorInput = turnInput;
-				rightMotorInput = -turnInput;
+				rightMotorInput = turnInput;
 				System.out.println("spin right");
 				// Spin Right
 			} else if (power > deadZone && IsValueInDeadZone(turnInput)) {
 				leftMotorInput = power;
-				rightMotorInput = -power;
+				rightMotorInput = power;
 				System.out.println("Forward");
 				// Move Forward
 			} else if (power > deadZone && turnInput < -deadZone) {
 				// Left input is negative, so it must be negated to move
 				// forward.
 				leftMotorInput = power * insideTurnSpeedReduction * turnInput;
-				rightMotorInput = -power;
+				rightMotorInput = power;
 				System.out.println("turn forward left");
 				// Turn Forwards Left
 			} else if (turnInput < deadZone && IsValueInDeadZone(power)) {
@@ -102,7 +104,7 @@ public class robotDrive {
 				// Left turn is a negative input already, so we don't need to
 				// negate
 				// it again.
-				leftMotorInput = -turnInput;
+				leftMotorInput = turnInput;
 				rightMotorInput = turnInput;
 				System.out.println("spin left");
 				// Spin Left
@@ -119,11 +121,16 @@ public class robotDrive {
 				// System.out.println("turn backwards right");
 				// // Turn Backwards Right
 			} else if (power < -deadZone && IsValueInDeadZone(turnInput)) {
-				leftMotorInput = -power;
+				leftMotorInput = power;
 				rightMotorInput = power;
 				System.out.println("move backwards");
 				// Move Backwards
 			}
+
+			RightMotorFront.set(rightMotorInput);
+			RightMotorBack.set(rightMotorInput);
+			LeftMotorFront.set(-leftMotorInput);
+			LeftMotorBack.set(-leftMotorInput);
 		}
 	}
 

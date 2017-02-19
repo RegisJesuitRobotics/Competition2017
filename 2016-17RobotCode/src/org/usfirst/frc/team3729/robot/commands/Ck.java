@@ -13,7 +13,7 @@ public class Ck {
 			climberMotor;
 	PlayStationController playStation;
 	DriverStation driverStation;
-	ADXRS450_Gyro gyro;
+	//ADXRS450_Gyro gyro;
 	boolean shootSequence = false;
 	double deadZone = 0.2;
 	double leftMotorInput = 1;
@@ -29,7 +29,7 @@ public class Ck {
 		shooterMotor1 = new CANTalon(5);
 		shooterMotor2 = new CANTalon(6);
 		climberMotor = new CANTalon(7);
-		gyro = new ADXRS450_Gyro();
+		//gyro = new ADXRS450_Gyro();
 		this.playStation = playStation;
 
 	}
@@ -99,7 +99,7 @@ public class Ck {
 				@Override
 				public void run() {
 					//Thread.sleep(2000);
-					clipMotor.set(Relay.Value.kOn);
+					clipMotor.set(Relay.Value.kReverse);
 				}
 			}, "Thread 3");
 			thread3.start();

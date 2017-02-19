@@ -50,7 +50,7 @@ public class Robot extends IterativeRobot {
 		playStation = new PlayStationController(0);
 		drive = new robotDrive(playStation);
 		//periphery = new modularPeripheries(playStation);
-		gyro = new ADXRS450_Gyro();
+		//gyro = new ADXRS450_Gyro();
 		ck = new Ck(playStation);
 		// cam = new USBCamera();
 
@@ -62,8 +62,8 @@ public class Robot extends IterativeRobot {
 		// autonomousPath3);
 		SmartDashboard.putData("Auto choices", chooser);
 
-		gyro.calibrate();
-		gyro.reset();
+		//gyro.calibrate();
+		//gyro.reset();
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class Robot extends IterativeRobot {
 		// System.out.println("Auto selected: " + autoSelected);
 		autoSelected = (String) chooser.getSelected();
 
-		gyro.calibrate();
+		//gyro.calibrate();
 //		gyro.reset();
 	}
 
@@ -142,7 +142,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		ck.CkDrive();
+		drive.arcadeDrive();
+		//ck.CkDrive();
 		ck.CkPeripheries();
 	}
 
