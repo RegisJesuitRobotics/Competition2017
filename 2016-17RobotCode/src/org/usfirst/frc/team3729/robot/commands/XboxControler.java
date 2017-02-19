@@ -7,31 +7,62 @@ public class XboxControler extends Joystick {
 		super(port);
 	}
 
+<<<<<<< HEAD
+	public double RightStickX() {
+		return super.getRawAxis(4);
+=======
 	public double GetLeftStick() {
 		return -super.getRawAxis(1);
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 	}
-
 	/**
 	 * Returns left or right. Left is negative, right is positive.
 	 * 
 	 * @return
 	 */
+<<<<<<< HEAD
+	public double LeftTrigger() {
+		return super.getRawAxis(2);
+=======
 	public double GetRightStick() {
 		return super.getRawAxis(4);
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 	}
-
-	public double GetRightTrigger() {
+	
+	public double RightTrigger() {
 
 		return super.getRawAxis(3);
 	}
+<<<<<<< HEAD
+	
+	public double LeftStick() {
+		return super.getRawAxis(4);
+	}
+
+	
+=======
 
 	public boolean GetA() {
 		return super.getRawButton(1);
 	}
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 
-	public boolean GetB() {
+	public boolean ButtonA() {
 		return super.getRawButton(2);
 	}
+<<<<<<< HEAD
+	
+	public boolean ButtonY() {
+		return super.getRawButton(4);
+	}
+	
+	public boolean ButtonB() {
+		return super.getRawButton(3);
+	}
+	
+	public boolean ButtonX() {
+		return super.getRawButton(1);
+=======
 
 	public boolean GetX() {
 		return super.getRawButton(3);
@@ -39,27 +70,26 @@ public class XboxControler extends Joystick {
 
 	public boolean GetY() {
 		return super.getRawButton(4);
+>>>>>>> 64a81e60820cda08c974c90a257465557e5a1b62
 	}
 
-	public boolean GetLeftBumper() {
+	public boolean LeftBumper() {
 		return super.getRawButton(5);
 	}
 
-	public boolean GetRightBumper() {
+	public boolean RightBumper() {
 		return super.getRawButton(6);
 	}
 
-	public boolean GetBack() {
+	public boolean ButtonBack() {
 		return super.getRawButton(7);
 	}
 
-	public boolean GetStart() {
+	public boolean ButtonStart() {
 		return super.getRawButton(8);
 	}
 
-	public double GetLeftTrigger() {
-		return super.getRawAxis(2);
-	}
+	
 
 	public double GetPOV() {
 		if ((super.getPOV(0) > 0) && (super.getPOV(0) < 180)) {
