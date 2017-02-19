@@ -32,8 +32,8 @@ public Ck(PlayStationController playStation) {
 
 	public void CkDrive (){
 
-		double R2 = playStation.L2Axis();
-		double L2 = playStation.L2Axis();
+		double R2 = playStation.LeftTrigger();
+		double L2 = playStation.LeftTrigger();
 		double LeftStick = playStation.LeftStickXAxis();
 		double Deadzone = 0.01;
 		double RightPower;
