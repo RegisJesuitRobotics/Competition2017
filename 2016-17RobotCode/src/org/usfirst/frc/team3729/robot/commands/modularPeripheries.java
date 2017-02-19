@@ -5,6 +5,7 @@ import java.util.Date;
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Direction;
 
 public class modularPeripheries {
 	Relay feedMotor1;
@@ -28,6 +29,26 @@ public class modularPeripheries {
 	public void ShootCycle() {
 		if (playStation.ButtonX() == true) {
 
+		} else {
+
+		}
+	}
+
+	public void XShoot() {
+		if (playStation.ButtonX() == true) {
+			ShootyMotor1.set(0.7);
+			ShootyMotor2.set(0.7);
+		} else {
+			ShootyMotor1.set(0);
+			ShootyMotor2.set(0);
+		}
+	}
+
+	public void SquareLoad() {
+		if (playStation.ButtonSquare() == true) {
+			feedMotor1.setDirection(Direction.kReverse);
+		} else {
+			feedMotor1.stopMotor();
 		}
 	}
 
