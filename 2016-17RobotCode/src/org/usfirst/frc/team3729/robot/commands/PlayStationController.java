@@ -79,11 +79,11 @@ public class PlayStationController extends Joystick {
 		return super.getRawAxis(5);
 	}
 
-	public double L2Axis() {
+	public double LeftTrigger() {
 		return super.getRawAxis(3);
 	}
 
-	public double R2Axis() {
+	public double RightTrigger() {
 		return super.getRawAxis(4);
 	}
 }
