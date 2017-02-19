@@ -36,7 +36,7 @@ public class Ck {
 
 	public void CkDrive() {
 
-		double R2 = playStation.LeftTrigger();
+		double R2 = playStation.RightTrigger();
 		double L2 = playStation.LeftTrigger();
 		double LeftStick = playStation.LeftStickXAxis();
 		double Deadzone = 0.1;
@@ -99,7 +99,7 @@ public class Ck {
 				@Override
 				public void run() {
 					//Thread.sleep(2000);
-					clipMotor.set(Relay.Value.kOn);
+					clipMotor.set(Relay.Value.kReverse);
 				}
 			}, "Thread 3");
 			thread3.start();
