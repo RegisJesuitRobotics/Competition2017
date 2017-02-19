@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team3729.robot;
 
+import org.usfirst.frc.team3729.robot.commands.Ck;
 import org.usfirst.frc.team3729.robot.commands.PlayStationController;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
@@ -34,6 +35,8 @@ public class Robot extends IterativeRobot {
 	SendableChooser chooser;
 	PlayStationController playStation;
 	modularPeripheries periphery;
+	Ck ck;
+	
 
 	// USBCamera cam;
 
@@ -46,8 +49,9 @@ public class Robot extends IterativeRobot {
 
 		playStation = new PlayStationController(0);
 		drive = new robotDrive(playStation);
-		periphery = new modularPeripheries(playStation);
+		//periphery = new modularPeripheries(playStation);
 		gyro = new ADXRS450_Gyro();
+		ck = new Ck(playStation);
 		// cam = new USBCamera();
 
 		chooser = new SendableChooser();
@@ -82,7 +86,7 @@ public class Robot extends IterativeRobot {
 		autoSelected = (String) chooser.getSelected();
 
 		gyro.calibrate();
-		gyro.reset();
+//		gyro.reset();
 	}
 
 	/**
@@ -138,8 +142,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		
-
+		ck.CkDrive();
+		ck.CkPeripheries();
 	}
 
 	/**

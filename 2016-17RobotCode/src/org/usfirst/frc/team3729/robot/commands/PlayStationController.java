@@ -47,11 +47,11 @@ public class PlayStationController extends Joystick {
 		return super.getRawButton(10);
 	}
 
-	public boolean ButtonLeftStickPress() {
+	public boolean ButtonL3() {
 		return super.getRawButton(11);
 	}
 
-	public boolean ButtonRightStickPress() {
+	public boolean ButtonR3() {
 		return super.getRawButton(12);
 	}
 
