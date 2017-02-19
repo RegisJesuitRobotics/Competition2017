@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 public class robotDrive {
 
 	CANTalon RightMotorFront, LeftMotorFront, RightMotorBack, LeftMotorBack;
-	XboxControler _xbox;
+	PlayStationController playStation;
 	DriverStation driverStation;
 	ADXRS450_Gyro gyro;
 	boolean isRight;
@@ -24,248 +24,49 @@ public class robotDrive {
 	double leftMotorInput = 1;
 	double rightMotorInput = 1;
 
-	public robotDrive(XboxControler xbox) {
+	public robotDrive(PlayStationController playStation) {
 		RightMotorBack = new CANTalon(4);
 		RightMotorFront = new CANTalon(3);
 		LeftMotorBack = new CANTalon(1);
 		LeftMotorFront = new CANTalon(2);
 
 		gyro = new ADXRS450_Gyro();
-		this._xbox = xbox;
-	
+		this.playStation = playStation;
+
 	}
 
 	public void arcadeDrive() {
-		double RT = _xbox.RightTrigger();
-		double LT = _xbox.LeftTrigger();
-		double RS = _xbox.RightStickX();
-		double deadzone = 0.1;
-		double rPower;
-		double lPower;
+
+		double R2 = playStation.L2Axis();
+		double L2 = playStation.L2Axis();
+		double RightStick = playStation.RightStickYAxis();
+		double Deadzone = 0.1;
+		double RightPower;
+		double LeftPower;
 		double Power;
-		double turn = 2*RS;
-		
-		Power = RT - LT;
-		if(RS>deadzone)
-		{
-			rPower = Power - (turn*Power);
-			lPower = Power;
-		}
-		else if(RS<-deadzone)
-		{
-			lPower = Power + (turn*Power);
-			rPower = Power;
-		}
-		else
-		{
-			rPower = Power;
-			lPower = Power;
-		}
-		RightMotorFront.set(rPower);
-		LeftMotorFront.set(-lPower);
-		RightMotorBack.set(rPower);
-		LeftMotorBack.set(-lPower);
-		
-		/* This limits the power of the motor, it is a percentage
-		// This SHOULD NOT go above 1.0, not should it be negative
-		double motorLimiterRatioinital = 0.5; // change to
-		double motorLimiterRatio = motorLimiterRatioinital;
-		double forwardInput = _xbox.GetForwardInput();
-		double turnInput = _xbox.GetTurnInput();
-		double leftMotorInput = 0;
-		double rightMotorInput = 0;
-		double deadZone = 0.2;
+		double turn = 2 * RightStick;
 
-		// System.out.println(forwardInput);
-		// System.out.println(turnInput + "turn");
+		// LOGIC
+		Power = R2 - L2;
+		if (RightStick > Deadzone) {
 
-		if (forwardInput > deadZone && turnInput > deadZone) {
-			leftMotorInput = forwardInput * 1.5;
-			rightMotorInput = turnInput * .05;
-			System.out.println("turn forward right");
-			// Turn Forward Right
-		} else if (forwardInput <= deadZone && forwardInput >= -deadZone && turnInput > deadZone) {
-			leftMotorInput = turnInput;
-			rightMotorInput = -turnInput;
-			System.out.println("spin right");
-			// Spin Right
-		} else if (forwardInput > deadZone && turnInput <= deadZone && turnInput >= -deadZone) {
-			leftMotorInput = forwardInput;
-			rightMotorInput = forwardInput;
-			System.out.println("Forward");
-			// Move Forward
-		} else if (forwardInput > deadZone && turnInput < deadZone) {
-			// Left input is negative, so it must be negated to move forward.
-			leftMotorInput = turnInput * .1;
-			rightMotorInput = forwardInput * 1.25;
-			System.out.println("turn forward left");
-			// Turn Forwards Left
-		} else if (forwardInput <= deadZone && forwardInput >= -deadZone && turnInput < -deadZone) {
-			// Left motor should move in reverse, right should move forward.
-			// Left turn is a negative input already, so we don't need to negate
-			// it again.
-			leftMotorInput = turnInput;
-			rightMotorInput = -turnInput;
-			System.out.println("spin left");
-			// Spin Left
-		} else if (forwardInput < -deadZone && turnInput < -deadZone) {
-			leftMotorInput = -turnInput * .1;
-			rightMotorInput = forwardInput * 1.25;
-			System.out.println("turn backwards left"); 
-			// Turn Backwards Left
-		} else if (forwardInput < -deadZone && turnInput > deadZone) {
-			leftMotorInput = forwardInput * 1.25;
-			rightMotorInput = -turnInput * .1;
-			System.out.println("turn backwards right");
-			// Turn Backwards Right
-		} else if (forwardInput < -deadZone) {
-			leftMotorInput = forwardInput;
-			rightMotorInput = forwardInput;
-			System.out.println("move backwards");
-			// Move Backwards
-		}
-		// Speed Switch
-		if (_xbox.GetRightTrigger() > deadZone) {
-			motorLimiterRatio = 0.7;
-					//(_xbox.GetRightTrigger() * 0.5);
+			RightPower = Power - (turn * Power);
+			LeftPower = Power;
+		} else if (RightStick < -Deadzone) {
+
+			LeftPower = Power + (turn * Power);
+			RightPower = Power;
 		} else {
-			motorLimiterRatio = motorLimiterRatioinital;
+			LeftPower = Power;
+			RightPower = Power;
 		}
-		RightMotorFront.set(rightMotorInput * motorLimiterRatio);
-		LeftMotorFront.set(-leftMotorInput * motorLimiterRatio);
-		RightMotorBack.set(rightMotorInput * motorLimiterRatio);
-		LeftMotorBack.set(-leftMotorInput * motorLimiterRatio);
-		// System.out.println(leftMotorInput + "left");
-		// System.out.println(rightMotorInput + "right");
-		*/
-	}
+		// MOTOR SETTING
 
-	
-	public void mechenumDrive() {
-		boolean leftBumper = _xbox.LeftBumper();
-		boolean rightBumper = _xbox.RightBumper();
-		double angle;
+		RightMotorFront.set(RightPower);
+		RightMotorBack.set(RightPower);
+		LeftMotorFront.set(-LeftPower);
+		LeftMotorBack.set(-LeftPower);
 
-		// Maybe lower this
-		double motorLimiterRatioinital = 0.8;
-
-		// speed button
-		if (_xbox.RightTrigger() > deadZone) {
-			motorLimiterRatio = 0.4;
-		} else {
-			motorLimiterRatio = motorLimiterRatioinital;
-		}
-
-		if (leftBumper == true) {
-			// currentHeading = gyro.getAngle();
-			isRight = true;
-			strafeStraight(gyro.getAngle(), isRight);
-
-		} else if (rightBumper == true) {
-			// currentHeading = gyro.getAngle();
-			isRight = false;
-			strafeStraight(gyro.getAngle(), isRight);
-		}
-
-	}
-
-
-	private void strafeStraight(double currentHeading, boolean isRight) {
-		double direction;
-		double angle = gyro.getAngle();
-		if (isRight == true) {
-			direction = 1;
-		} else {
-			direction = -1;
-		}
-
-		if (angle >= currentHeading + .05) {
-			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * .80 * direction);
-			RightMotorBack.set(rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * .75 * direction);
-			System.out.println("right");
-		} else if (angle <= currentHeading - .05) {
-			System.out.println("left");
-			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * .80 * direction);
-			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction);
-			RightMotorBack.set(rightMotorInput * motorLimiterRatio * .75 * direction);
-			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * direction);
-		} else {
-			System.out.println("straight");
-			RightMotorFront.set(-rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorFront.set(-leftMotorInput * motorLimiterRatio * direction);
-			RightMotorBack.set(rightMotorInput * motorLimiterRatio * direction);
-			LeftMotorBack.set(leftMotorInput * motorLimiterRatio * direction);
-		}
-	}
-
-	private void driveStraight(double speed, double currentHeading) {
-
-		double angle = gyro.getAngle();
-
-		if (angle >= currentHeading + .05) {
-
-			RightMotorFront.set(speed);
-			LeftMotorFront.set(-speed * .75);
-			RightMotorBack.set(speed);
-			LeftMotorBack.set(-speed * .75);
-			System.out.println("right");
-
-		} else if (angle <= currentHeading - .05) {
-			System.out.println("left");
-		 	RightMotorFront.set(speed * .75);
-			LeftMotorFront.set(-speed);
-			RightMotorBack.set(speed * .75);
-			LeftMotorBack.set(-speed);
-
-		} else {
-			System.out.println("straight");
-			RightMotorFront.set(speed);
-			LeftMotorFront.set(-speed);
-			RightMotorBack.set(speed);
-			LeftMotorBack.set(-speed);
-		}
-	}
-
-	// AUTONOMOUS STUFF
-	// IMPORTANT
-	// WORDS
-	// TEXT
-	public void autoDrive(double speed){
-		double angle = gyro.getAngle();
-		driveStraight( speed, angle);
-	}
-
-	public void TurnAround() {
-		gyro.reset();
-		do {
-			LeftMotorFront.set(.5);
-			LeftMotorBack.set(.5);
-			RightMotorFront.set(-.5);
-			RightMotorBack.set(.5);
-		} while (gyro.getAngle() <= 180 && driverStation.isAutonomous() == true);
-		// leftMotorInput = turnInput;
-		// rightMotorInput = -turnInput;
-		// System.out.println("spin right")
-}
-
-	public void StopAutonomous() {
-		if (driverStation.isAutonomous()) {
-			this.Stop();
-		}
-	}
-
-	public void Stop() {
-		LeftMotorFront.set(-.2);
-		LeftMotorBack.set(-.2);
-		RightMotorFront.set(-.2);
-		RightMotorBack.set(-.2);
-		Timer.delay(.1);
-		LeftMotorFront.set(0);
-		LeftMotorBack.set(0);
-		RightMotorFront.set(0);
-		RightMotorBack.set(0);
 	}
 
 }
