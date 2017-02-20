@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team3729.robot;
 
+import org.usfirst.frc.team3729.robot.commands.Ck;
 import org.usfirst.frc.team3729.robot.commands.PlayStationController;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
@@ -34,6 +35,8 @@ public class Robot extends IterativeRobot {
 	SendableChooser chooser;
 	PlayStationController playStation;
 	modularPeripheries periphery;
+	Ck ck;
+	
 
 	// USBCamera cam;
 
@@ -45,9 +48,10 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		playStation = new PlayStationController(0);
-		drive = new robotDrive(playStation);
-		periphery = new modularPeripheries(playStation);
-		gyro = new ADXRS450_Gyro();
+		//drive = new robotDrive(playStation);
+		//periphery = new modularPeripheries(playStation);
+		//gyro = new ADXRS450_Gyro();
+		ck = new Ck(playStation);
 		// cam = new USBCamera();
 
 		chooser = new SendableChooser();
@@ -58,8 +62,8 @@ public class Robot extends IterativeRobot {
 		// autonomousPath3);
 		SmartDashboard.putData("Auto choices", chooser);
 
-		gyro.calibrate();
-		gyro.reset();
+		//gyro.calibrate();
+		//gyro.reset();
 	}
 
 	/**
@@ -81,8 +85,8 @@ public class Robot extends IterativeRobot {
 		// System.out.println("Auto selected: " + autoSelected);
 		autoSelected = (String) chooser.getSelected();
 
-		gyro.calibrate();
-		gyro.reset();
+		//gyro.calibrate();
+//		gyro.reset();
 	}
 
 	/**
@@ -138,8 +142,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		
-
+		drive.arcadeDrive();
+		//ck.CkDrive();
+		ck.CkPeripheries();
 	}
 
 	/**
