@@ -5,6 +5,7 @@ import org.usfirst.frc.team3729.robot.commands.Ck;
 import org.usfirst.frc.team3729.robot.commands.PlayStationController;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
+//import org.usfirst.frc.team3729.robot.commands.AutoMethods;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -21,22 +22,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	
+	
 	ADXRS450_Gyro gyro;
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
-	final String autonomousPath1 = "Go Straight for 5 seconds";
-	// final String autonomousPath2 = "Go straight and turn";
-	// final String autonomousPath3 = "Autonomous Path Defense Driveover";
+	final String autonomousPath1 = "1";
+	final String autonomousPath2 = "2";
+	final String autonomousPath3 = "3";
 	String autoSelected;
 	boolean automove;
 	double seconds = 10.0;
 
+//<<<<<<< HEAD
 	//robotDrive drive;
+//=======
+//	AutoMethods auto;
+//	robotDrive drive;
+//>>>>>>> d8f2cae2e2a0f7fe0f60d520b7c9ed4236c9caab
 	SendableChooser chooser;
 	PlayStationController playStation;
 	//modularPeripheries periphery;
 	Ck ck;
-	
 
 	// USBCamera cam;
 
@@ -48,22 +55,20 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		playStation = new PlayStationController(0);
-		//drive = new robotDrive(playStation);
-		//periphery = new modularPeripheries(playStation);
-		gyro = new ADXRS450_Gyro();
+		// drive = new robotDrive(playStation);
+		// periphery = new modularPeripheries(playStation);
+		// gyro = new ADXRS450_Gyro();
 		ck = new Ck(playStation);
 		// cam = new USBCamera();
+		// gyro.calibrate();
+		// gyro.reset();
 
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
 		chooser.addObject("Autonomous Path High Center Goal", autonomousPath1);
-		// chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
-		// chooser.addObject("Autonomous Path Defense Driveover",
-		// autonomousPath3);
+		chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
+		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
 		SmartDashboard.putData("Auto choices", chooser);
-
-		gyro.calibrate();
-		gyro.reset();
 	}
 
 	/**
@@ -79,14 +84,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		// autoSelected = (String) chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		// System.out.println("Auto selected: " + autoSelected);
+		autoSelected = (String) chooser.getSelected();
+		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
+		System.out.println("Auto selected: " + autoSelected);
 		autoSelected = (String) chooser.getSelected();
 
-		gyro.calibrate();
-//		gyro.reset();
+		// gyro.calibrate();
+		// gyro.reset();
 	}
 
 	/**
@@ -94,54 +98,30 @@ public class Robot extends IterativeRobot {
 	 */
 	// @Override
 
-	/*
-	 * public void autonomousPeriodic() { automove = true;
-	 * 
-	 * while (seconds >= 5) { drive.autoDrive(0.5); seconds = seconds - 1;
-	 * Timer.delay(1); }
-	 * 
-	 * switch (autoSelected) {
-	 * 
-	 * case autonomousPath1: // BLUE - LEFT if (automove == true) {
-	 * 
-	 * }
-	 * 
-	 * automove = false;
-	 * 
-	 * break; /*switch (autoSelected) { case autonomousPath1: if (automove ==
-	 * true) { automove = false; } break;
-	 * 
-	 * case autonomousPath2: if (automove == true) { automove = false; } break;
-	 * 
-	 * case autonomousPath3: if (automove == true) {
-	 * 
-	 * automove = false; } break; case defaultAuto: default: if (automove ==
-	 * true) {
-	 * 
-	 * automove = false; } break;
-	 */
+	public void autonomousPeriodic() {
+		switch (autoSelected) {
+		case autonomousPath1:
+			if (automove == true) {
+				automove = false;
+			}
+			break;
+		case autonomousPath2:
+			if (automove == true) {
+				//drive.RightMotorFront.set(.3);
+				//drive.RightMotorBack.set(.3);
+				//drive.LeftMotorFront.set(-.3);
+				//drive.LeftMotorBack.set(-.3);
 
-	// switch (autoSelected) {
-	// case customAuto:
-	// Put custom auto code here
-	// break;+
-	// case defaultAuto:
-	// default:
-	// Talon RightMotor, LeftMotor;
-	//
-	// RightMotor = new Talon(1);
-	// LeftMotor = new Talon(2);
-	//
-	// RightMotor.set(.5);
-	// LeftMotor.set(.5);
-	// break;
-	// }
+			}
+		}
+	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	@Override
 	public void teleopPeriodic() {
+		//drive.arcadeDrive();
 		ck.CkDrive();
 		ck.CkPeripheries();
 	}
@@ -152,6 +132,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 
+	
 	}
 
 }

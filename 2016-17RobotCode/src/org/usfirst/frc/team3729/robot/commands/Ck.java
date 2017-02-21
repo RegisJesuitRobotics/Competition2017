@@ -8,12 +8,17 @@ import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Ck {
-	Relay clipMotor;
+	Relay clipMotor, brady;
 	CANTalon RightFrontMotor, LeftFrontMotor, RightBackMotor, LeftBackMotor, intakeMotor, shooterMotor1, shooterMotor2,
 			climberMotor;
 	PlayStationController playStation;
 	DriverStation driverStation;
+//<<<<<<< HEAD
 	ADXRS450_Gyro gyro;
+//=======
+	//ADXRS450_Gyro gyro;
+	boolean shootSequence = false;
+//>>>>>>> d8f2cae2e2a0f7fe0f60d520b7c9ed4236c9caab
 	double deadZone = 0.2;
 	double leftMotorInput = 1;
 	double rightMotorInput = 1;
@@ -24,11 +29,12 @@ public class Ck {
 		LeftBackMotor = new CANTalon(1);
 		LeftFrontMotor = new CANTalon(2);
 		clipMotor = new Relay(0);
+		brady = new Relay(1);
 		intakeMotor = new CANTalon(8);
 		shooterMotor1 = new CANTalon(5);
 		shooterMotor2 = new CANTalon(6);
 		climberMotor = new CANTalon(7);
-		gyro = new ADXRS450_Gyro();
+		//gyro = new ADXRS450_Gyro();
 		this.playStation = playStation;
 
 	}
@@ -98,6 +104,7 @@ public class Ck {
 			shooterMotor1.set(-0.95);
 			shooterMotor2.set(-0.95);
 			clipMotor.set(Relay.Value.kReverse);
+			brady.set(Relay.Value.kForward);
 		}
 //			Thread thread3 = new Thread(new Runnable() {
 //				@Override
@@ -113,6 +120,7 @@ public class Ck {
 			shooterMotor1.set(0);
 			shooterMotor2.set(0);
 			clipMotor.set(Relay.Value.kOff);
+			brady.set(Relay.Value.kOff);
 		}
 		
 	}
