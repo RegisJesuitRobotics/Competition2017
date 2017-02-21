@@ -7,8 +7,10 @@ import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
 import org.usfirst.frc.team3729.robot.commands.AutoMethods;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -39,7 +41,7 @@ public class Robot extends IterativeRobot {
 	modularPeripheries periphery;
 	Ck ck;
 
-	// USBCamera cam;
+	UsbCamera cam;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -53,7 +55,7 @@ public class Robot extends IterativeRobot {
 		// periphery = new modularPeripheries(playStation);
 		// gyro = new ADXRS450_Gyro();
 		ck = new Ck(playStation);
-		// cam = new USBCamera();
+		cam = CameraServer.getInstance().startAutomaticCapture();
 		// gyro.calibrate();
 		// gyro.reset();
 
