@@ -31,10 +31,10 @@ public class Robot extends IterativeRobot {
 	boolean automove;
 	double seconds = 10.0;
 
-	robotDrive drive;
+	//robotDrive drive;
 	SendableChooser chooser;
 	PlayStationController playStation;
-	modularPeripheries periphery;
+	//modularPeripheries periphery;
 	Ck ck;
 	
 

@@ -14,7 +14,6 @@ public class Ck {
 	PlayStationController playStation;
 	DriverStation driverStation;
 	ADXRS450_Gyro gyro;
-	boolean shootSequence = false;
 	double deadZone = 0.2;
 	double leftMotorInput = 1;
 	double rightMotorInput = 1;
@@ -67,7 +66,7 @@ public class Ck {
 	public void CkPeripheries() {
 		// intake
 		if (playStation.ButtonR1() == true) {
-			intakeMotor.set(-0.8);
+			intakeMotor.set(-0.7);
 		} else {
 			intakeMotor.set(0);
 		}
@@ -93,16 +92,28 @@ public class Ck {
 		}
 		// shooter sequence
 		if (playStation.ButtonX() == true) {
+			
+			boolean shootSequence = false;
+
 			shooterMotor1.set(-0.95);
 			shooterMotor2.set(-0.95);
-			Thread thread3 = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					//Thread.sleep(2000);
-					clipMotor.set(Relay.Value.kReverse);
-				}
-			}, "Thread 3");
-			thread3.start();
+			clipMotor.set(Relay.Value.kReverse);
 		}
+//			Thread thread3 = new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					//Thread.sleep(2000);
+//					clipMotor.set(Relay.Value.kReverse);
+//				}
+//			}, "Thread 3");
+//			thread3.start();
+			
+		
+		else {
+			shooterMotor1.set(0);
+			shooterMotor2.set(0);
+			clipMotor.set(Relay.Value.kOff);
+		}
+		
 	}
 }
