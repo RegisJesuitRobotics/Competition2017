@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Ck {
 	Relay clipMotor;
-	CANTalon RightFrontMotor, LeftFrontMotor, RightBackMotor, LeftBackMotor, intakeMotor, shooterMotor1, shooterMotor2,
+	CANTalon RightFrontMotor, LeftFrontMotor, RightMotorBack, LeftMotorBack, intakeMotor, shooterMotor1, shooterMotor2,
 			climberMotor;
 	PlayStationController playStation;
 	DriverStation driverStation;
@@ -20,9 +20,9 @@ public class Ck {
 	double rightMotorInput = 1;
 
 	public Ck(PlayStationController playStation) {
-		RightBackMotor = new CANTalon(4);
+		RightMotorBack = new CANTalon(4);
 		RightFrontMotor = new CANTalon(3);
-		LeftBackMotor = new CANTalon(1);
+		LeftMotorBack = new CANTalon(1);
 		LeftFrontMotor = new CANTalon(2);
 		clipMotor = new Relay(0);
 		intakeMotor = new CANTalon(8);
@@ -59,9 +59,9 @@ public class Ck {
 		}
 
 		RightFrontMotor.set(RightPower);
-		RightBackMotor.set(RightPower);
+		RightMotorBack.set(RightPower);
 		LeftFrontMotor.set(-LeftPower);
-		LeftBackMotor.set(-LeftPower);
+		LeftMotorBack.set(-LeftPower);
 	}
 
 	public void CkPeripheries() {
@@ -104,5 +104,55 @@ public class Ck {
 			}, "Thread 3");
 			thread3.start();
 		}
+
 	}
+
+	public void GoForewards(double speed, double time) {
+		RightMotorBack.set(speed);
+		RightFrontMotor.set(speed);
+		LeftMotorBack.set(-speed);
+		LeftFrontMotor.set(-speed);
+		System.out.println("Finished setting motors");
+		Timer.delay(time);
+		System.out.println("Finshed Delay 1");
+		Stop();
+		System.out.println("Stopped");
+		Timer.delay(15);
+	}
+
+	public void GoBackwards(double speed, double time) {
+		RightMotorBack.set(-speed);
+		RightFrontMotor.set(-speed);
+		LeftMotorBack.set(speed);
+		LeftFrontMotor.set(speed);
+		Timer.delay(time);
+		Stop();
+	}
+
+	public void TurnLeft(double speed, double time) {
+		RightMotorBack.set(speed);
+		RightFrontMotor.set(speed);
+		LeftMotorBack.set(speed);
+		LeftFrontMotor.set(speed);
+		Timer.delay(time);
+		Stop();
+	}
+
+	public void TurnRight(double speed, double time) {
+		RightMotorBack.set(-speed);
+		RightFrontMotor.set(-speed);
+		LeftMotorBack.set(-speed);
+		LeftFrontMotor.set(-speed);
+		Timer.delay(time);
+		Stop();
+	}
+
+	public void Stop() {
+		RightMotorBack.set(0);
+		RightFrontMotor.set(0);
+		LeftMotorBack.set(0);
+		LeftFrontMotor.set(0);
+
+	}
+
 }

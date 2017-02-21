@@ -5,7 +5,6 @@ import org.usfirst.frc.team3729.robot.commands.Ck;
 import org.usfirst.frc.team3729.robot.commands.PlayStationController;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
-import org.usfirst.frc.team3729.robot.commands.AutoMethods;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
@@ -24,7 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	ADXRS450_Gyro gyro;
+
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
 	final String autonomousPath1 = "1";
@@ -34,11 +33,10 @@ public class Robot extends IterativeRobot {
 	boolean automove;
 	double seconds = 10.0;
 
-	AutoMethods auto;
-	robotDrive drive;
+	// robotDrive drive;
 	SendableChooser chooser;
 	PlayStationController playStation;
-	modularPeripheries periphery;
+	// modularPeripheries periphery;
 	Ck ck;
 
 	UsbCamera cam;
@@ -49,22 +47,21 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-
+		automove = true;
 		playStation = new PlayStationController(0);
 		// drive = new robotDrive(playStation);
 		// periphery = new modularPeripheries(playStation);
-		// gyro = new ADXRS450_Gyro();
 		ck = new Ck(playStation);
-		cam = CameraServer.getInstance().startAutomaticCapture();
-		// gyro.calibrate();
-		// gyro.reset();
+		// cam = CameraServer.getInstance().startAutomaticCapture();
 
-		chooser = new SendableChooser();
-		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("Autonomous Path High Center Goal", autonomousPath1);
-		chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
-		chooser.addObject("Autonomous Path Defense Driveover", autonomousPath3);
-		SmartDashboard.putData("Auto choices", chooser);
+		// chooser = new SendableChooser();
+		// chooser.addDefault("Default Auto", defaultAuto);
+		// chooser.addObject("Autonomous Path High Center Goal",
+		// autonomousPath1);
+		// chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
+		// chooser.addObject("Autonomous Path Defense Driveover",
+		// autonomousPath3);
+		// SmartDashboard.putData("Auto choices", chooser);
 	}
 
 	/**
@@ -80,13 +77,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autoSelected = (String) chooser.getSelected();
-		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
-		System.out.println("Auto selected: " + autoSelected);
-		autoSelected = (String) chooser.getSelected();
-
-		// gyro.calibrate();
-		// gyro.reset();
+		// autoSelected = (String) chooser.getSelected();
+		// autoSelected = SmartDashboard.getString("Auto Selector",
+		// defaultAuto);
+		// System.out.println("Auto selected: " + autoSelected);
+		// autoSelected = (String) chooser.getSelected();
 	}
 
 	/**
@@ -95,17 +90,44 @@ public class Robot extends IterativeRobot {
 	// @Override
 
 	public void autonomousPeriodic() {
-		switch (autoSelected) {
-		case autonomousPath1:
-			if (automove == true) {
-				automove = false;
-			}
-			break;
-		case autonomousPath2:
-			if (automove == true) {
-
-			}
+		// AUTO STR8
+		if (automove == true) {
+			ck.GoForewards(.25, 2.7);
+			automove = false;
 		}
+
+		// Need to go 9 feet and 4 inches
+
+		// // Inside of robot 5ft From Center Line LEFT
+		// // turn 65 degrees
+		// auto.GoForewards(0.6, 2);
+		// auto.TurnRight(0.5, 2);
+		// auto.GoForewards(0.6, 2);
+		//
+		// // Inside of robot 5ft From Center Line RIGHT
+		// //Go 103.5 inches
+		//
+		// // Drive 86 inches
+		// // turn 65 degrees
+		// // drive 37.5 inches
+		// auto.GoForewards(0.6, 2);
+		// auto.TurnLeft(0.5, 2);
+		// auto.GoForewards(0.6, 2);
+		//
+		// switch (autoSelected)
+		//
+		// {
+		//
+		// case autonomousPath1:
+		// if (automove == true) {
+		// automove = false;
+		// }
+		// break;
+		// case autonomousPath2:
+		// if (automove == true) {
+		//
+		// }
+		// }
 	}
 
 	/**
@@ -113,8 +135,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		drive.arcadeDrive();
-		// ck.CkDrive();
+		// drive.arcadeDrive();
+		ck.CkDrive();
 		ck.CkPeripheries();
 	}
 
