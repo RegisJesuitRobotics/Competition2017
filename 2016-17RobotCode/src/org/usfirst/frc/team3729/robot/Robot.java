@@ -26,9 +26,9 @@ public class Robot extends IterativeRobot {
 
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
-	final String autonomousPath1 = "1";
-	final String autonomousPath2 = "2";
-	final String autonomousPath3 = "3";
+	final String autonomousPath1 = "Str8 Foreward  Gear Floop";
+	final String autonomousPath2 = "Yoooo";
+	final String autonomousPath3 = "Dank-O's";
 	String autoSelected;
 	boolean automove;
 	double seconds = 10.0;
@@ -53,15 +53,13 @@ public class Robot extends IterativeRobot {
 		// periphery = new modularPeripheries(playStation);
 		ck = new Ck(playStation);
 		// cam = CameraServer.getInstance().startAutomaticCapture();
+		chooser = new SendableChooser();
 
-		// chooser = new SendableChooser();
-		// chooser.addDefault("Default Auto", defaultAuto);
-		// chooser.addObject("Autonomous Path High Center Goal",
-		// autonomousPath1);
-		// chooser.addObject("Autonomous Path High Left Goal", autonomousPath2);
-		// chooser.addObject("Autonomous Path Defense Driveover",
-		// autonomousPath3);
-		// SmartDashboard.putData("Auto choices", chooser);
+		chooser.addDefault("Default Auto", defaultAuto);
+		chooser.addObject("Str8 Foreward  Gear Floop", autonomousPath1);
+		chooser.addObject("Yoooo", autonomousPath2);
+		chooser.addObject("Dank-O's", autonomousPath3);
+		SmartDashboard.putData("Auto choices", chooser);
 	}
 
 	/**
@@ -77,11 +75,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		// autoSelected = (String) chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		// System.out.println("Auto selected: " + autoSelected);
-		// autoSelected = (String) chooser.getSelected();
+		automove = true;
+		autoSelected = (String) chooser.getSelected();
+
+		System.out.println("Auto selected: " + autoSelected);
 	}
 
 	/**
@@ -90,16 +87,11 @@ public class Robot extends IterativeRobot {
 	// @Override
 
 	public void autonomousPeriodic() {
-		// AUTO STR8
-		if (automove == true) {
-			ck.GoForewards(.25, 2.7);
-			automove = false;
-		}
 
 		// Need to go 9 feet and 4 inches
 
-		// // Inside of robot 5ft From Center Line LEFT
-		// // turn 65 degrees
+		// Inside of robot 5ft From Center Line LEFT
+		// turn 65 degrees
 		// auto.GoForewards(0.6, 2);
 		// auto.TurnRight(0.5, 2);
 		// auto.GoForewards(0.6, 2);
@@ -113,21 +105,37 @@ public class Robot extends IterativeRobot {
 		// auto.GoForewards(0.6, 2);
 		// auto.TurnLeft(0.5, 2);
 		// auto.GoForewards(0.6, 2);
-		//
-		// switch (autoSelected)
-		//
-		// {
-		//
-		// case autonomousPath1:
-		// if (automove == true) {
-		// automove = false;
-		// }
-		// break;
-		// case autonomousPath2:
-		// if (automove == true) {
-		//
-		// }
-		// }
+
+		switch (autoSelected)
+
+		{
+
+		case autonomousPath1:
+			if (automove == true) {
+				ck.GoForewards(.25, 3); // perfect gear (.25,3)
+				automove = false;
+			}
+			automove = false;
+
+			break;
+			
+		case autonomousPath2:
+			if (automove == true) {
+				 ck.GoForewards(.25, 2.5);
+				 ck.TurnRight(.25, .5);
+				 ck.GoForewards(.25, 1.5);
+			}
+			break;
+			
+		case autonomousPath3:
+			if (automove == true) {
+				 ck.GoForewards(.25, 2.5);
+				 ck.TurnLeft(.25, .5);
+				 ck.GoForewards(.25, 1.5);
+			}
+			break;
+		}
+
 	}
 
 	/**

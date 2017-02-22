@@ -79,8 +79,8 @@ public class Ck {
 		}
 		// shooter
 		if (playStation.ButtonTriangle() == true) {
-			shooterMotor1.set(-0.95);
-			shooterMotor2.set(-0.95);
+			shooterMotor1.set(-0.6799999999999997);
+			shooterMotor2.set(-0.6799999999999997);
 		} else {
 			shooterMotor1.set(0);
 			shooterMotor2.set(0);
@@ -93,8 +93,8 @@ public class Ck {
 		}
 		// shooter sequence
 		if (playStation.ButtonX() == true) {
-			shooterMotor1.set(-0.95);
-			shooterMotor2.set(-0.95);
+			shooterMotor1.set(-0.68);
+			shooterMotor2.set(-0.68);
 			Thread thread3 = new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -117,7 +117,6 @@ public class Ck {
 		System.out.println("Finshed Delay 1");
 		Stop();
 		System.out.println("Stopped");
-		Timer.delay(15);
 	}
 
 	public void GoBackwards(double speed, double time) {
