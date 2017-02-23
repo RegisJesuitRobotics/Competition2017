@@ -5,10 +5,16 @@ import org.usfirst.frc.team3729.robot.commands.Ck;
 import org.usfirst.frc.team3729.robot.commands.PlayStationController;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
+//<<<<<<< HEAD
 //import org.usfirst.frc.team3729.robot.commands.AutoMethods;
+//=======
+//import org.usfirst.frc.team3729.robot.commands.AutoMethods;
+//>>>>>>> 5e196497e2dae7eb8124cb389dfbdca1e56da8a4
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -35,17 +41,22 @@ public class Robot extends IterativeRobot {
 	double seconds = 10.0;
 
 //<<<<<<< HEAD
+//<<<<<<< HEAD
 	//robotDrive drive;
 //=======
 //	AutoMethods auto;
 //	robotDrive drive;
 //>>>>>>> d8f2cae2e2a0f7fe0f60d520b7c9ed4236c9caab
+//=======
+	//AutoMethods auto;
+	//robotDrive drive;
+//>>>>>>> 5e196497e2dae7eb8124cb389dfbdca1e56da8a4
 	SendableChooser chooser;
 	PlayStationController playStation;
 	//modularPeripheries periphery;
 	Ck ck;
 
-	// USBCamera cam;
+	UsbCamera cam;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -59,7 +70,11 @@ public class Robot extends IterativeRobot {
 		// periphery = new modularPeripheries(playStation);
 		// gyro = new ADXRS450_Gyro();
 		ck = new Ck(playStation);
+//<<<<<<< HEAD
 		// cam = new USBCamera();
+//=======
+		cam = CameraServer.getInstance().startAutomaticCapture();
+//>>>>>>> 5e196497e2dae7eb8124cb389dfbdca1e56da8a4
 		// gyro.calibrate();
 		// gyro.reset();
 
@@ -107,10 +122,13 @@ public class Robot extends IterativeRobot {
 			break;
 		case autonomousPath2:
 			if (automove == true) {
+//<<<<<<< HEAD
 				//drive.RightMotorFront.set(.3);
 				//drive.RightMotorBack.set(.3);
 				//drive.LeftMotorFront.set(-.3);
 				//drive.LeftMotorBack.set(-.3);
+//=======
+//>>>>>>> 5e196497e2dae7eb8124cb389dfbdca1e56da8a4
 
 			}
 		}
@@ -121,9 +139,12 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		//drive.arcadeDrive();
+		double driver = 1;
+		if(driver == 1){
 		ck.CkDrive();
 		ck.CkPeripheries();
+		}
+		
 	}
 
 	/**
@@ -131,7 +152,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-
+	
 	
 	}
 

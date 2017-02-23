@@ -14,9 +14,13 @@ public class Ck {
 	PlayStationController playStation;
 	DriverStation driverStation;
 //<<<<<<< HEAD
+//<<<<<<< HEAD
 	ADXRS450_Gyro gyro;
 //=======
 	//ADXRS450_Gyro gyro;
+//=======
+	// ADXRS450_Gyro gyro;
+//>>>>>>> 5e196497e2dae7eb8124cb389dfbdca1e56da8a4
 	boolean shootSequence = false;
 //>>>>>>> d8f2cae2e2a0f7fe0f60d520b7c9ed4236c9caab
 	double deadZone = 0.2;
@@ -34,7 +38,11 @@ public class Ck {
 		shooterMotor1 = new CANTalon(5);
 		shooterMotor2 = new CANTalon(6);
 		climberMotor = new CANTalon(7);
+//<<<<<<< HEAD
 		//gyro = new ADXRS450_Gyro();
+//=======
+		// gyro = new ADXRS450_Gyro();
+//>>>>>>> 5e196497e2dae7eb8124cb389dfbdca1e56da8a4
 		this.playStation = playStation;
 
 	}
@@ -68,27 +76,24 @@ public class Ck {
 		LeftFrontMotor.set(-LeftPower);
 		LeftBackMotor.set(-LeftPower);
 	}
-
+	double x = 1;
 	public void CkPeripheries() {
 		// intake
+		
 		if (playStation.ButtonR1() == true) {
 			intakeMotor.set(-0.7);
 		} else {
 			intakeMotor.set(0);
 		}
 		// clip
-		if (playStation.ButtonSquare() == true) {
-			clipMotor.set(Relay.Value.kForward);
-		} else {
-			clipMotor.set(Relay.Value.kOff);
+		if (playStation.ButtonSquare() == true && x>0) {
+			x= x-.01;
+			System.out.println(x);
 		}
 		// shooter
-		if (playStation.ButtonTriangle() == true) {
-			shooterMotor1.set(-0.95);
-			shooterMotor2.set(-0.95);
-		} else {
-			shooterMotor1.set(0);
-			shooterMotor2.set(0);
+		if (playStation.ButtonTriangle() == true && x<1) {
+			x= x+.01;
+			System.out.println(x);
 		}
 		// climber
 		if (playStation.ButtonL1() == true) {
@@ -101,10 +106,12 @@ public class Ck {
 			
 			boolean shootSequence = false;
 
-			shooterMotor1.set(-0.95);
-			shooterMotor2.set(-0.95);
+			shooterMotor1.set(-0.6799999999999997);
+			shooterMotor2.set(-0.6799999999999997);
+//<<<<<<< HEADv 
 			clipMotor.set(Relay.Value.kReverse);
 			brady.set(Relay.Value.kForward);
+			System.out.println("brady on");
 		}
 //			Thread thread3 = new Thread(new Runnable() {
 //				@Override
@@ -121,6 +128,17 @@ public class Ck {
 			shooterMotor2.set(0);
 			clipMotor.set(Relay.Value.kOff);
 			brady.set(Relay.Value.kOff);
+			System.out.println("brady off");
+//=======
+//			Thread thread3 = new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					// Thread.sleep(2000);
+//					clipMotor.set(Relay.Value.kReverse);
+//				}
+//			}, "Thread 3");
+//			thread3.start();
+//>>>>>>> 5e196497e2dae7eb8124cb389dfbdca1e56da8a4
 		}
 		
 	}
