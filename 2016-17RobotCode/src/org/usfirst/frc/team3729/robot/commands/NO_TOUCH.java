@@ -1,36 +1,29 @@
 package org.usfirst.frc.team3729.robot.commands;
 
-import edu.wpi.first.wpilibj.CANSpeedController;
-
 import com.ctre.CANTalon;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
-public class Ck {
+public class NO_TOUCH {
 
 	Relay clipMotor, brady;
 	CANTalon RightFrontMotor, LeftFrontMotor, RightBackMotor, LeftBackMotor, intakeMotor, shooterMotor1, shooterMotor2,
 			climberMotor;
+	Talon test, test2, test3;
 
 	PlayStationController playStation;
 	DriverStation driverStation;
 
-	ADXRS450_Gyro gyro;
+	NetworkTable networkTable;
 
-	// ADXRS450_Gyro gyro;
+	public NO_TOUCH(PlayStationController playStation) {
 
-	// ADXRS450_Gyro gyro;
+		networkTable = NetworkTable.getTable("GRIP/DOEET");
 
-	boolean shootSequence = false;
-
-	double deadZone = 0.2;
-	double leftMotorInput = 1;
-	double rightMotorInput = 1;
-
-	public Ck(PlayStationController playStation) {
 		RightFrontMotor = new CANTalon(4);
 		RightBackMotor = new CANTalon(3);
 		LeftBackMotor = new CANTalon(1);
@@ -41,17 +34,13 @@ public class Ck {
 		shooterMotor1 = new CANTalon(5);
 		shooterMotor2 = new CANTalon(6);
 		climberMotor = new CANTalon(7);
-
-		// gyro = new ADXRS450_Gyro();
-
-		// gyro = new ADXRS450_Gyro();
-
+		test = new Talon(1);
+		test2 = new Talon(2);
+		test3 = new Talon(3);
 		this.playStation = playStation;
-
 	}
 
 	public void CkDrive() {
-
 		double R2 = playStation.RightTrigger();
 		double L2 = playStation.LeftTrigger();
 		double LeftStick = playStation.LeftStickXAxis();
@@ -62,111 +51,96 @@ public class Ck {
 		double turn = 2 * LeftStick;
 		Power = R2 - L2;
 		if (LeftStick > Deadzone) {
-
 			RightPower = Power - (turn * Power);
 			LeftPower = Power;
 		} else if (LeftStick < -Deadzone) {
-
 			LeftPower = Power + (turn * Power);
 			RightPower = Power;
 		} else {
 			LeftPower = Power;
 			RightPower = Power;
 		}
-
 		RightFrontMotor.set(RightPower);
 		RightBackMotor.set(RightPower);
 		LeftFrontMotor.set(-LeftPower);
 		LeftBackMotor.set(-LeftPower);
 	}
 
-	double x = 1;
+	public void rev() {
+		if (playStation.ButtonX() == true) {
+			shooterMotor1.set(-0.6799999999999997);
+			shooterMotor2.set(-0.6799999999999997);
+			brady.set(Relay.Value.kForward);
+			test.set(1);
+			test3.set(1);
+			// System.out.println("RUUUUUUUUUUUUUUUUUU");
+		} else {
+			shooterMotor1.set(0);
+			shooterMotor2.set(0);
+			brady.set(Relay.Value.kOff);
+			test.set(0);
+			test3.set(0);
+			// System.out.print("..");
+		}
+	}
 
 	public void CkPeripheries() {
 		// intake
-		
 		if (playStation.ButtonR1() == true) {
 			intakeMotor.set(-0.7);
 		} else {
 			intakeMotor.set(0);
 		}
-		// clip
-		if (playStation.ButtonSquare() == true && x>0) {
-			x= x-.01;
-			System.out.println(x);
-		}
 		// shooter
-
-		if (playStation.ButtonTriangle() == true && x<1) {
-			x= x+.01;
-			System.out.println(x);
-		}
-			
 		if (playStation.ButtonTriangle() == true) {
 			shooterMotor1.set(-0.6799999999999997);
 			shooterMotor2.set(-0.6799999999999997);
 		} else {
 			shooterMotor1.set(0);
 			shooterMotor2.set(0);
-
 		}
 		// climber
 		if (playStation.ButtonL1() == true) {
 			climberMotor.set(-1);
-			System.out.println("mmmmm");
 		} else {
 			climberMotor.set(0);
 		}
-		// shooter sequence
+		// shoot sequence manual
 		if (playStation.ButtonX() == true) {
-
-		if (shootSequence = false){
-			System.out.println("mmmmm");
 			try {
-			    Thread.sleep(1000);
-			} catch(InterruptedException ex) {
-			    Thread.currentThread().interrupt();
+				Thread.sleep(1000);
+			} catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
 			}
-			shootSequence = true;
-		}
-			System.out.println("yaes");
-			shootSequence = true;
-			shooterMotor1.set(-0.6799999999999997);
-			shooterMotor2.set(-0.6799999999999997);
-
 			clipMotor.set(Relay.Value.kReverse);
-			brady.set(Relay.Value.kForward);
-//			System.out.println("brady on");
-		}
-		
-//			Thread thread3 = new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					//Thread.sleep(2000);
-//					clipMotor.set(Relay.Value.kReverse);
-//				}
-//			}, "Thread 3");
-//			thread3.start();
-			
-		
-		else {
-			shootSequence = false;
+			test2.set(1);
+		} else {
+			test2.set(0);
 			shooterMotor1.set(0);
 			shooterMotor2.set(0);
 			clipMotor.set(Relay.Value.kOff);
-			brady.set(Relay.Value.kOff);}
-//			System.out.println("brady off");
-
-//			Thread thread3 = new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					// Thread.sleep(2000);
-//					clipMotor.set(Relay.Value.kReverse);
-//				}
-//			}, "Thread 3");
-//			thread3.start();
-
 		}
+
+		// auto line-up vision
+		if (playStation.ButtonSquare() == true) {
+//			double[] taco;
+//			taco = networkTable.getNumberArray("area");
+
+			/*
+			 * if (currentLocationX < desiredLocationX){
+			 * RightFrontMotor.set(-1); RightBackMotor.set(-1);
+			 * LeftFrontMotor.set(-1); LeftBackMotor.set(-1); } else if
+			 * (currentLocationX > desiredLocationX) { RightFrontMotor.set(1);
+			 * RightBackMotor.set(1); LeftFrontMotor.set(1);
+			 * LeftBackMotor.set(1); } if (currentLocationY < desiredLocationY)
+			 * { RightFrontMotor.set(1); RightBackMotor.set(-1);
+			 * LeftFrontMotor.set(-1); LeftBackMotor.set(1); } else if
+			 * (currentLocationY > desiredLocationY) { RightFrontMotor.set(-1);
+			 * RightBackMotor.set(1); LeftFrontMotor.set(1);
+			 * LeftBackMotor.set(-1); }
+			 */
+		}
+	}
 
 	public void GoForewards(double speed, double time) {
 		RightBackMotor.set(speed);
@@ -196,7 +170,6 @@ public class Ck {
 		LeftFrontMotor.set(speed);
 		Timer.delay(time);
 		Stop();
-
 	}
 
 	public void TurnRight(double speed, double time) {
@@ -213,7 +186,5 @@ public class Ck {
 		RightFrontMotor.set(0);
 		LeftBackMotor.set(0);
 		LeftFrontMotor.set(0);
-
 	}
-
 }
