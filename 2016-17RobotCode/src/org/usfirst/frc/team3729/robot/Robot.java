@@ -6,15 +6,12 @@ import org.usfirst.frc.team3729.robot.commands.NO_TOUCH;
 import org.usfirst.frc.team3729.robot.commands.PlayStationController;
 import org.usfirst.frc.team3729.robot.commands.modularPeripheries;
 import org.usfirst.frc.team3729.robot.commands.robotDrive;
-//<<<<<<< HEAD
-////<<<<<<< HEAD
-////import org.usfirst.frc.team3729.robot.commands.AutoMethods;
-////=======
-////import org.usfirst.frc.team3729.robot.commands.AutoMethods;
-////>>>>>>> 5e196497e2dae7eb8124cb389dfbdca1e56da8a4
-//=======
-//>>>>>>> e0656688bd1513c860a962ddaf0e25a606525d90
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team3729.robot.Vision;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -32,13 +29,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-//<<<<<<< HEAD
-	
-	
+	// <<<<<<< HEAD
+
 	ADXRS450_Gyro gyro;
-//=======
-//
-//>>>>>>> e0656688bd1513c860a962ddaf0e25a606525d90
+	// =======
+	//
+	// >>>>>>> e0656688bd1513c860a962ddaf0e25a606525d90
 	// THESE ARE THE AUTONIMOUS THINGIES
 	final String defaultAuto = "Default";
 	final String autonomousPath1 = "Gay Forward  Gear Floop";
@@ -48,20 +44,22 @@ public class Robot extends IterativeRobot {
 	boolean automove;
 	double seconds = 10.0;
 
-//	//AutoMethods auto;
-//	//robotDrive drive;
+	// //AutoMethods auto;
+	// //robotDrive drive;
 
-//	SendableChooser chooser;
+	// SendableChooser chooser;
 	PlayStationController playStation;
-//	//modularPeripheries periphery;
+	// //modularPeripheries periphery;
 
-//	// robotDrive drive;
+	// // robotDrive drive;
 	SendableChooser chooser;
 
-	//Ck ck;
+	// Ck ck;
 	NO_TOUCH no;
 
-	UsbCamera cam;
+	// UsbCamera cam;
+
+	Vision gripVision;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -73,16 +71,15 @@ public class Robot extends IterativeRobot {
 		playStation = new PlayStationController(0);
 		// drive = new robotDrive(playStation);
 		// periphery = new modularPeripheries(playStation);
-		//ck = new Ck(playStation);
+		// ck = new Ck(playStation);
 		no = new NO_TOUCH(playStation);
-		
+
 		// cam = new USBCamera();
 
-		cam = CameraServer.getInstance().startAutomaticCapture();
+		// cam = CameraServer.getInstance().startAutomaticCapture();
 
 		// gyro.calibrate();
 		// gyro.reset();
-
 
 		// cam = CameraServer.getInstance().startAutomaticCapture();
 
@@ -93,6 +90,26 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Yoooo", autonomousPath2);
 		chooser.addObject("Dank-O's", autonomousPath3);
 		SmartDashboard.putData("Auto choices", chooser);
+
+		// From:
+		// http://wpilib.screenstepslive.com/s/4485/m/24194/l/669166-using-the-camera-server-on-the-roborio-2017
+		new Thread(() -> {
+			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+			camera.setResolution(640, 480);
+
+			CvSink cvSink = CameraServer.getInstance().getVideo();
+			CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+
+			Mat source = new Mat();
+			Mat output = new Mat();
+
+			while (!Thread.interrupted()) {
+				cvSink.grabFrame(source);
+				// Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+				gripVision.process(source);
+				outputStream.putFrame(output);
+			}
+		}).start();
 	}
 
 	/**
@@ -151,22 +168,22 @@ public class Robot extends IterativeRobot {
 			automove = false;
 
 			break;
-			
+
 		case autonomousPath2:
 			if (automove == true) {
 
-				 no.GoForewards(.25, 2.5);
-				 no.TurnRight(.25, .5);
-				 no.GoForewards(.25, 1.5);
+				no.GoForewards(.25, 2.5);
+				no.TurnRight(.25, .5);
+				no.GoForewards(.25, 1.5);
 
 			}
 			break;
-			
+
 		case autonomousPath3:
 			if (automove == true) {
-				 no.GoForewards(.25, 2.5);
-				 no.TurnLeft(.25, .5);
-				 no.GoForewards(.25, 1.5);
+				no.GoForewards(.25, 2.5);
+				no.TurnLeft(.25, .5);
+				no.GoForewards(.25, 1.5);
 			}
 			break;
 		}
@@ -180,16 +197,16 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 
 		double driver = 1;
-		if(driver == 1){
+		if (driver == 1) {
 
-		// drive.arcadeDrive();
+			// drive.arcadeDrive();
 
-		no.CkDrive();
-		no.rev();
-		no.CkPeripheries();
-		
+			no.CkDrive();
+			no.rev();
+			no.CkPeripheries();
+
 		}
-		
+
 	}
 
 	/**
@@ -197,8 +214,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-	
-	
+
 	}
 
 }

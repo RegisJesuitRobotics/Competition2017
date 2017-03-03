@@ -123,19 +123,21 @@ public class NO_TOUCH {
 
 		// auto line-up vision
 		if (playStation.ButtonSquare() == true) {
-//			double[] taco;
-//			taco = networkTable.getNumberArray("area");
-
-			/*
-			 * if (currentLocationX < desiredLocationX){
+			double centerX;
+			centerX = networkTable.getNumber("Name of the table and key the value will be in",0);
+			double centerY;
+			centerY = networkTable.getNumber("",0);
+			
+			 /* if (centerX < desiredcenterX){
 			 * RightFrontMotor.set(-1); RightBackMotor.set(-1);
-			 * LeftFrontMotor.set(-1); LeftBackMotor.set(-1); } else if
-			 * (currentLocationX > desiredLocationX) { RightFrontMotor.set(1);
+			 * LeftFrontMotor.set(-1); LeftBackMotor.set(-1); }
+			 * else if(centerX > desiredLocationX) { RightFrontMotor.set(1);
 			 * RightBackMotor.set(1); LeftFrontMotor.set(1);
-			 * LeftBackMotor.set(1); } if (currentLocationY < desiredLocationY)
+			 * LeftBackMotor.set(1); }
+			 * if (centerY < desiredLocationY)
 			 * { RightFrontMotor.set(1); RightBackMotor.set(-1);
 			 * LeftFrontMotor.set(-1); LeftBackMotor.set(1); } else if
-			 * (currentLocationY > desiredLocationY) { RightFrontMotor.set(-1);
+			 * (centerY > desiredLocationY) { RightFrontMotor.set(-1);
 			 * RightBackMotor.set(1); LeftFrontMotor.set(1);
 			 * LeftBackMotor.set(-1); }
 			 */
