@@ -61,7 +61,7 @@ public class Ck {
 		double Power;
 		double turn = 2 * LeftStick;
 		Power = R2 - L2;
-		
+
 		if (LeftStick > Deadzone) {
 
 			RightPower = Power - (turn * Power);
@@ -85,24 +85,24 @@ public class Ck {
 
 	public void CkPeripheries() {
 		// intake
-		
+
 		if (playStation.ButtonR1() == true) {
 			intakeMotor.set(-0.7);
 		} else {
 			intakeMotor.set(0);
 		}
 		// clip
-		if (playStation.ButtonSquare() == true && x>0) {
-			x= x-.01;
+		if (playStation.ButtonSquare() == true && x > 0) {
+			x = x - .01;
 			System.out.println(x);
 		}
 		// shooter
 
-		if (playStation.ButtonTriangle() == true && x<1) {
-			x= x+.01;
+		if (playStation.ButtonTriangle() == true && x < 1) {
+			x = x + .01;
 			System.out.println(x);
 		}
-			
+
 		if (playStation.ButtonTriangle() == true) {
 			shooterMotor1.set(-0.6799999999999997);
 			shooterMotor2.set(-0.6799999999999997);
@@ -121,15 +121,15 @@ public class Ck {
 		// shooter sequence
 		if (playStation.ButtonX() == true) {
 
-		if (shootSequence = false){
-			System.out.println("mmmmm");
-			try {
-			    Thread.sleep(1000);
-			} catch(InterruptedException ex) {
-			    Thread.currentThread().interrupt();
+			if (shootSequence = false) {
+				System.out.println("mmmmm");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ex) {
+					Thread.currentThread().interrupt();
+				}
+				shootSequence = true;
 			}
-			shootSequence = true;
-		}
 			System.out.println("yaes");
 			shootSequence = true;
 			shooterMotor1.set(-0.6799999999999997);
@@ -137,43 +137,43 @@ public class Ck {
 
 			clipMotor.set(Relay.Value.kReverse);
 			brady.set(Relay.Value.kForward);
-//			System.out.println("brady on");
+			// System.out.println("brady on");
 		}
-		
-//			Thread thread3 = new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					//Thread.sleep(2000);
-//					clipMotor.set(Relay.Value.kReverse);
-//				}
-//			}, "Thread 3");
-//			thread3.start();
-			
-		
+
+		// Thread thread3 = new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// //Thread.sleep(2000);
+		// clipMotor.set(Relay.Value.kReverse);
+		// }
+		// }, "Thread 3");
+		// thread3.start();
+
 		else {
 			shootSequence = false;
 			shooterMotor1.set(0);
 			shooterMotor2.set(0);
 			clipMotor.set(Relay.Value.kOff);
-			brady.set(Relay.Value.kOff);}
-//			System.out.println("brady off");
-
-//			Thread thread3 = new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					// Thread.sleep(2000);
-//					clipMotor.set(Relay.Value.kReverse);
-//				}
-//			}, "Thread 3");
-//			thread3.start();
-
+			brady.set(Relay.Value.kOff);
 		}
+		// System.out.println("brady off");
+
+		// Thread thread3 = new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// // Thread.sleep(2000);
+		// clipMotor.set(Relay.Value.kReverse);
+		// }
+		// }, "Thread 3");
+		// thread3.start();
+
+	}
 
 	public void GoForewards(double speed, double time) {
 		RightBackMotor.set(speed);
 		RightFrontMotor.set(speed);
-		LeftBackMotor.set(-speed);
-		LeftFrontMotor.set(-speed);
+		LeftBackMotor.set(-speed * 0.5);
+		LeftFrontMotor.set(-speed * 0.5);
 		System.out.println("Finished setting motors");
 		Timer.delay(time);
 		System.out.println("Finshed Delay 1");

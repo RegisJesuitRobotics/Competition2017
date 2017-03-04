@@ -88,9 +88,9 @@ public class Robot extends IterativeRobot {
 		chooser = new SendableChooser();
 
 		chooser.addDefault("Default Auto", defaultAuto);
-		chooser.addObject("Gay Forward  Gear Floop", autonomousPath1);
-		chooser.addObject("Yoooo", autonomousPath2);
-		chooser.addObject("Dank-O's", autonomousPath3);
+		chooser.addObject("STR8 M8 8/8", autonomousPath1);
+		chooser.addObject("Starting on the Right", autonomousPath2);
+		chooser.addObject("Starting on the Left", autonomousPath3);
 		SmartDashboard.putData("Auto choices", chooser);
 
 	}
@@ -140,34 +140,38 @@ public class Robot extends IterativeRobot {
 		// auto.GoForewards(0.6, 2);
 
 		switch (autoSelected)
-
+//low key just like change the numbers in this format. (SPEED, TIME)
+		//You're welcome CK. I love you buddy!!!
+		//Also you Sean!!!! Good luck!!! I beliv e in you guys!!!!
+		
 		{
-
+		// GO FOREWARD
 		case autonomousPath1:
 			if (automove == true) {
-				no.GoForewards(.25, 3); // perfect gear (.25,3)
+				no.GoForewards(.25, 2.3); // perfect gear (.25,3)
 				automove = false;
 			}
 			automove = false;
 
 			break;
-
+		// LEFT SIDE
 		case autonomousPath2:
 			if (automove == true) {
 
-				no.GoForewards(.25, 2.5);
-				no.TurnRight(.25, .5);
-				no.GoForewards(.25, 1.5);
+				no.GoForewards(.25, 2.9);
+				no.TurnLeft(.8, .8);
+				no.GoForewards(.25, 1.3);
 
 			}
-			break;
-
+			automove = false;
+			// RIGHT SIDE
 		case autonomousPath3:
 			if (automove == true) {
-				no.GoForewards(.25, 2.5);
-				no.TurnLeft(.25, .5);
-				no.GoForewards(.25, 1.5);
+				no.GoForewards(.25, 3.2);
+				no.TurnRight(.8, .8);
+				no.GoForewards(.25, .85);
 			}
+			automove = false;
 			break;
 		}
 

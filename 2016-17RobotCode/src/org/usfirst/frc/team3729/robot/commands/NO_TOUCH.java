@@ -13,7 +13,7 @@ public class NO_TOUCH {
 	Relay clipMotor, brady;
 	CANTalon RightFrontMotor, LeftFrontMotor, RightBackMotor, LeftBackMotor, intakeMotor, shooterMotor1, shooterMotor2,
 			climberMotor;
-	Talon test, test2, test3;
+	//Talon test, test2, test3;
 
 	PlayStationController playStation;
 	DriverStation driverStation;
@@ -34,9 +34,9 @@ public class NO_TOUCH {
 		shooterMotor1 = new CANTalon(5);
 		shooterMotor2 = new CANTalon(6);
 		climberMotor = new CANTalon(7);
-		test = new Talon(1);
-		test2 = new Talon(2);
-		test3 = new Talon(3);
+		//test = new Talon(1);
+		//test2 = new Talon(2);
+		//test3 = new Talon(3);
 		this.playStation = playStation;
 	}
 
@@ -86,15 +86,15 @@ public class NO_TOUCH {
 			shooterMotor1.set(-0.6799999999999997);
 			shooterMotor2.set(-0.6799999999999997);
 			brady.set(Relay.Value.kForward);
-			test.set(1);
-			test3.set(1);
+			//test.set(1);
+			//test3.set(1);
 			// System.out.println("RUUUUUUUUUUUUUUUUUU");
 		} else {
 			shooterMotor1.set(0);
 			shooterMotor2.set(0);
 			brady.set(Relay.Value.kOff);
-			test.set(0);
-			test3.set(0);
+			//test.set(0);
+			//test3.set(0);
 
 			// System.out.print("..");
 		}
@@ -117,11 +117,9 @@ public class NO_TOUCH {
 		if (playStation.ButtonTriangle() == true) {
 			//shooterMotor1.set(-0.6799999999999997);
 			//shooterMotor2.set(-0.6799999999999997);
-			clipMotor.set(Relay.Value.kReverse);
 		} else {
 			//shooterMotor1.set(0);
-			//shooterMotor2.set(0);
-			clipMotor.set(Relay.Value.kOff);
+			//shooterMotor2.set(0); 
 		}
 		// shoot sequence manual
 		if (playStation.ButtonX() == true) {
@@ -131,9 +129,9 @@ public class NO_TOUCH {
 				Thread.currentThread().interrupt();
 			}
 			clipMotor.set(Relay.Value.kReverse);
-			test2.set(1);
+			//test2.set(1);
 		} else {
-			test2.set(0);
+			//test2.set(0);
 			shooterMotor1.set(0);
 			shooterMotor2.set(0);
 			clipMotor.set(Relay.Value.kOff);
