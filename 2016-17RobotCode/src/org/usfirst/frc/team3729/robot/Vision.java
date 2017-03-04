@@ -5,6 +5,8 @@ import java.util.List;
 import org.opencv.core.*;
 import org.opencv.imgproc.*;
 
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+
 /**
  * Vision class.
  *
@@ -14,6 +16,7 @@ import org.opencv.imgproc.*;
  * @author GRIP
  */
 public class Vision {
+	private NetworkTable networkTable;
 
 	// Outputs
 	private Mat hslThresholdOutput = new Mat();
@@ -29,6 +32,7 @@ public class Vision {
 	 * outputs.
 	 */
 	public void process(Mat source0) {
+		System.out.println("process1");
 		// Step HSL_Threshold0:
 		Mat hslThresholdInput = source0;
 		double[] hslThresholdHue = { 100.35971010760437, 136.99661046571697 };
@@ -37,11 +41,13 @@ public class Vision {
 		hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance,
 				hslThresholdOutput);
 
+		System.out.println("process2");
 		// Step Find_Contours0:
 		Mat findContoursInput = hslThresholdOutput;
 		boolean findContoursExternalOnly = false;
 		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 
+		System.out.println("process3");
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
 		double filterContoursMinArea = 126.0;
@@ -59,10 +65,22 @@ public class Vision {
 				filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight,
 				filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio,
 				filterContoursMaxRatio, filterContoursOutput);
+		System.out.println("process4");
+
+		System.out.println("filterContoursOutput size:" + filterContoursOutput.size());
+
+		// From: https://www.chiefdelphi.com/forums/showthread.php?p=1640532
+		Rect r = Imgproc.boundingRect(filterContoursOutput.get(0));
+		double centerX = r.x + (r.width / 2);
+		System.out.println("centerX: " + centerX);
+		NetworkTable.getTable("GRIP").putNumber("centerX", centerX);
+
+		networkTable = NetworkTable.getTable("GRIP");
 
 		// Write the contour output to a network table
 		for (int i = 0; i < filterContoursOutput.size(); i++) {
-			// Start here on Friday with NetworkTables code.
+			System.out.println(filterContoursOutput.get(i));
+			//networkTable.putValue("gripValue" + i, filterContoursOutput.get(i).size());
 		}
 	}
 

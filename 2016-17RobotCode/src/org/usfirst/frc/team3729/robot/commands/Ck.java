@@ -61,6 +61,7 @@ public class Ck {
 		double Power;
 		double turn = 2 * LeftStick;
 		Power = R2 - L2;
+		
 		if (LeftStick > Deadzone) {
 
 			RightPower = Power - (turn * Power);

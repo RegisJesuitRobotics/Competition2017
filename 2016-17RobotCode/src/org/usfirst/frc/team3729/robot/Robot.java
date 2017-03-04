@@ -59,7 +59,9 @@ public class Robot extends IterativeRobot {
 
 	// UsbCamera cam;
 
-	Vision gripVision;
+	Vision gripVision = new Vision();
+
+	boolean isGarrisonStop = true;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -91,25 +93,6 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Dank-O's", autonomousPath3);
 		SmartDashboard.putData("Auto choices", chooser);
 
-		// From:
-		// http://wpilib.screenstepslive.com/s/4485/m/24194/l/669166-using-the-camera-server-on-the-roborio-2017
-		new Thread(() -> {
-			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setResolution(640, 480);
-
-			CvSink cvSink = CameraServer.getInstance().getVideo();
-			CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
-
-			Mat source = new Mat();
-			Mat output = new Mat();
-
-			while (!Thread.interrupted()) {
-				cvSink.grabFrame(source);
-				// Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-				gripVision.process(source);
-				outputStream.putFrame(output);
-			}
-		}).start();
 	}
 
 	/**
@@ -195,6 +178,31 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		if (isGarrisonStop) {
+			isGarrisonStop = false;
+			System.out.println("begin thread");
+			// From:
+			// http://wpilib.screenstepslive.com/s/4485/m/24194/l/669166-using-the-camera-server-on-the-roborio-2017
+			new Thread(() -> {
+				UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+				camera.setResolution(640, 480);
+
+				CvSink cvSink = CameraServer.getInstance().getVideo();
+				// CvSource outputStream =
+				// CameraServer.getInstance().putVideo("Blur", 640, 480);
+
+				Mat source = new Mat();
+				// Mat output = new Mat();
+
+				while (!Thread.interrupted()) {
+					cvSink.grabFrame(source);
+					// Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+					System.out.println("process");
+					gripVision.process(source);
+					// outputStream.putFrame(output);
+				}
+			}).start();
+		}
 
 		double driver = 1;
 		if (driver == 1) {

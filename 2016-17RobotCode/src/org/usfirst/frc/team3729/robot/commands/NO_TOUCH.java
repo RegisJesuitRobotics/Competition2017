@@ -22,7 +22,7 @@ public class NO_TOUCH {
 
 	public NO_TOUCH(PlayStationController playStation) {
 
-		networkTable = NetworkTable.getTable("GRIP/DOEET");
+		networkTable = NetworkTable.getTable("GRIP");
 
 		RightFrontMotor = new CANTalon(4);
 		RightBackMotor = new CANTalon(3);
@@ -43,6 +43,7 @@ public class NO_TOUCH {
 	public void CkDrive() {
 		double R2 = playStation.RightTrigger();
 		double L2 = playStation.LeftTrigger();
+		double RightStick = playStation.RightStickXAxis();
 		double LeftStick = playStation.LeftStickXAxis();
 		double Deadzone = 0.1;
 		double RightPower;
@@ -50,6 +51,19 @@ public class NO_TOUCH {
 		double Power;
 		double turn = 2 * LeftStick;
 		Power = R2 - L2;
+		if(RightStick > Deadzone){
+			RightFrontMotor.set(-(Power - (turn * Power)));
+			RightBackMotor.set(Power - (turn * Power));
+			LeftFrontMotor.set(Power - (turn * Power));
+			LeftBackMotor.set(-(Power - (turn * Power)));
+		}
+		else if(RightStick < -Deadzone){
+			RightFrontMotor.set(Power - (turn * Power));
+			RightBackMotor.set(-(Power - (turn * Power)));
+			LeftFrontMotor.set(-(Power - (turn * Power)));
+			LeftBackMotor.set(Power - (turn * Power));
+		}
+		else{
 		if (LeftStick > Deadzone) {
 			RightPower = Power - (turn * Power);
 			LeftPower = Power;
@@ -64,6 +78,7 @@ public class NO_TOUCH {
 		RightBackMotor.set(RightPower);
 		LeftFrontMotor.set(-LeftPower);
 		LeftBackMotor.set(-LeftPower);
+		}
 	}
 
 	public void rev() {
@@ -80,6 +95,7 @@ public class NO_TOUCH {
 			brady.set(Relay.Value.kOff);
 			test.set(0);
 			test3.set(0);
+
 			// System.out.print("..");
 		}
 	}
@@ -91,19 +107,21 @@ public class NO_TOUCH {
 		} else {
 			intakeMotor.set(0);
 		}
-		// shooter
-		if (playStation.ButtonTriangle() == true) {
-			shooterMotor1.set(-0.6799999999999997);
-			shooterMotor2.set(-0.6799999999999997);
-		} else {
-			shooterMotor1.set(0);
-			shooterMotor2.set(0);
-		}
 		// climber
 		if (playStation.ButtonL1() == true) {
 			climberMotor.set(-1);
 		} else {
 			climberMotor.set(0);
+		}
+		// shooter
+		if (playStation.ButtonTriangle() == true) {
+			//shooterMotor1.set(-0.6799999999999997);
+			//shooterMotor2.set(-0.6799999999999997);
+			clipMotor.set(Relay.Value.kReverse);
+		} else {
+			//shooterMotor1.set(0);
+			//shooterMotor2.set(0);
+			clipMotor.set(Relay.Value.kOff);
 		}
 		// shoot sequence manual
 		if (playStation.ButtonX() == true) {
