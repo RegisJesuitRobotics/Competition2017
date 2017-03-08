@@ -3,26 +3,26 @@ package org.usfirst.frc.team3729.robot.commands;
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.Servo;
+//import edu.wpi.first.wpilibj.Servo;
 
 public class modularPeripheries {
 	Relay EatMotor1;
 	CANTalon ShootyMotor1, ShootyMotor2, LoadMotor;
 	XboxControler _xbox;
-	Servo GearNom;
+	//Servo GearNom;
 	boolean eatIsRunning = false;
 	boolean gearIsNommed = false;
 
 	public modularPeripheries(XboxControler xbox) {
 		EatMotor1 = new Relay(0);
-		GearNom = new Servo(0);
+		//GearNom = new Servo(0);
 		// LoadMotor = new CANTalon(9);
 		// ShootyMotor1 = new CANTalon(7);
 		// ShootyMotor2 = new CANTalon(8);
 		this._xbox = xbox;
 	}
 
-	public void GearNoms() {
+	/*public void GearNoms() {
 		if (_xbox.GetB() == true) {
 			GearNom.set(0.7);
 			System.out.println("A");
@@ -32,7 +32,7 @@ public class modularPeripheries {
 			System.out.println("Y");
 		}
 
-	}
+	}*/
 
 	// EATING DOODLES
 	public void onOffEating() {
