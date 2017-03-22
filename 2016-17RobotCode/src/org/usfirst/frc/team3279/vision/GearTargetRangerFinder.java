@@ -19,7 +19,7 @@ public class GearTargetRangerFinder extends RangeFinder {
 	public void process(Mat m_image) {
 		double targetRectagleWidthActualInches = 10.25;
 		double tapeHeightActualInches = 5;
-		double turnMargin = 1;
+		double turnMargin = 4;
 		
 		pipeline.process(m_image);
 		System.out.println("Image results" + pipeline.filterContoursOutput()); // Change
@@ -39,6 +39,7 @@ public class GearTargetRangerFinder extends RangeFinder {
 			}
 			if (points.size() > 2) {
 				System.out.println("Need Special Logic to handle multiple pieces of tape");
+				distance = 0;
 				return;
 			}
 			if (points.size() == 2) {
@@ -68,6 +69,9 @@ public class GearTargetRangerFinder extends RangeFinder {
 				System.out.println(" halfFOV " + halfFOV + " tan " + Math.tan(halfFOV));
 				System.out.println("leftHeight " + leftHeight + " rightHeight " + rightHeight + " topWidth " + topWidth + " image width " + m_image.width() + " distance " + distance + " Turn " + directionToTurn);
 			} 
+		}
+		else {
+			distance = 0;
 		}
 
 	}

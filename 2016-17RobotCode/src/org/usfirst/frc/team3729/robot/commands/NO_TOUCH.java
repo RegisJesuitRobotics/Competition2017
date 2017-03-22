@@ -26,7 +26,7 @@ public class NO_TOUCH {
 	DriverStation driverStation;
 	// ADXRS450_Gyro gyro;
 	NetworkTable networkTable;
-	boolean PnuematicsIsForward = true;
+	public boolean PnuematicsIsForward = true;
 	double angle = 0;
 	double front = 2;
 	double back = 2;
@@ -34,12 +34,11 @@ public class NO_TOUCH {
 	double toggles = 0;
 	double gearSpeed = 0;
 	boolean gearUp = false;
-	VisionThread visionThread;
-	boolean visionIsRunning;
-	UsbCamera camera;
+	boolean inOperation = false;
 	
+
 	public NO_TOUCH(PlayStationController playStation, UsbCamera camera) {
-		this.camera = camera;
+	
 		// gyro = new ADXRS450_Gyro();
 		RightFrontMotor = new CANTalon(4);
 		RightBackMotor = new CANTalon(3);
@@ -158,44 +157,45 @@ public class NO_TOUCH {
 			clipMotor.set(Relay.Value.kOff);
 		}
 		// auto line-up vision
-		if (playStation.ButtonSquare() == true) {
-			double centerX;
-			centerX = networkTable.getNumber("Name of the table and key the value will be in", 0);
-			double centerY;
-			centerY = networkTable.getNumber("", 0);
-			/*
-			 * if (centerX < desiredcenterX){ RightFrontMotor.set(-1);
-			 * RightBackMotor.set(-1); LeftFrontMotor.set(-1);
-			 * LeftBackMotor.set(-1); } else if(centerX > desiredLocationX) {
-			 * RightFrontMotor.set(1); RightBackMotor.set(1);
-			 * LeftFrontMotor.set(1); LeftBackMotor.set(1); } if (centerY <
-			 * desiredLocationY) { RightFrontMotor.set(1);
-			 * RightBackMotor.set(-1); LeftFrontMotor.set(-1);
-			 * LeftBackMotor.set(1); } else if (centerY > desiredLocationY) {
-			 * RightFrontMotor.set(-1); RightBackMotor.set(1);
-			 * LeftFrontMotor.set(1); LeftBackMotor.set(-1); }
-			 */
-		}
+//		if (playStation.ButtonSquare() == true) {
+//			double centerX;
+//			centerX = networkTable.getNumber("Name of the table and key the value will be in", 0);
+//			double centerY;
+//			centerY = networkTable.getNumber("", 0);
+//			/*
+//			 * if (centerX < desiredcenterX){ RightFrontMotor.set(-1);
+//			 * RightBackMotor.set(-1); LeftFrontMotor.set(-1);
+//			 * LeftBackMotor.set(-1); } else if(centerX > desiredLocationX) {
+//			 * RightFrontMotor.set(1); RightBackMotor.set(1);
+//			 * LeftFrontMotor.set(1); LeftBackMotor.set(1); } if (centerY <
+//			 * desiredLocationY) { RightFrontMotor.set(1);
+//			 * RightBackMotor.set(-1); LeftFrontMotor.set(-1);
+//			 * LeftBackMotor.set(1); } else if (centerY > desiredLocationY) {
+//			 * RightFrontMotor.set(-1); RightBackMotor.set(1);
+//			 * LeftFrontMotor.set(1); LeftBackMotor.set(-1); }
+//			 */
+//		}
 	}
 
 	public void pacMan() {
-		//System.out.println(PnuematicsIsForward);
-		if (PnuematicsIsForward == true) {
+		// System.out.println(PnuematicsIsForward);
+		if (PnuematicsIsForward == false) {
 			if (gearIntake.getAverageVoltage() < 1) {
-				intakeMotor.set(gearSpeed);
+				intakeMotor.set(1);
 			} else {
 				intakeMotor.set(0);
 			}
 		}
 	}
 
+	
 	public void TogglePnuematics() {
 		/*
 		 * try { Thread.sleep(500); } catch (InterruptedException ex) {
 		 * Thread.currentThread().interrupt(); }
 		 */
 		gearActuator.set(DoubleSolenoid.Value.kReverse);
-		PnuematicsIsForward = true;
+		PnuematicsIsForward = false;
 	}
 
 	public void ToggleState() {
@@ -204,12 +204,12 @@ public class NO_TOUCH {
 			Timer.delay(.5);
 			gearActuator.set(DoubleSolenoid.Value.kForward);
 			PnuematicsIsForward = false;
-		} else if (PnuematicsIsForward == false && gearIntake.getVoltage() < 1) {
-			gearActuator.set(DoubleSolenoid.Value.kReverse);
-			PnuematicsIsForward = true;
-		} else if (PnuematicsIsForward == true) {
+		} else if (PnuematicsIsForward == true && gearIntake.getVoltage() < 1) {
 			gearActuator.set(DoubleSolenoid.Value.kForward);
 			PnuematicsIsForward = false;
+		} else if (PnuematicsIsForward == false) {
+			gearActuator.set(DoubleSolenoid.Value.kReverse);
+			PnuematicsIsForward = true;
 		}
 	}
 
@@ -280,6 +280,7 @@ public class NO_TOUCH {
 	}
 
 	public void GoForewards(double speed, double time) {
+		setInOperation(true);
 		RightBackMotor.set(speed);
 		RightFrontMotor.set(speed);
 		LeftBackMotor.set(-speed);
@@ -289,33 +290,49 @@ public class NO_TOUCH {
 		System.out.println("Finshed Delay 1");
 		Stop();
 		System.out.println("Stopped");
+		setInOperation(false);
+	}
+
+	
+	public boolean isInOperation() {
+		return inOperation;
+	}
+
+	public synchronized void setInOperation(boolean inOperation) {
+		this.inOperation = inOperation;
 	}
 
 	public void GoBackwards(double speed, double time) {
+		setInOperation(true);
 		RightBackMotor.set(-speed);
 		RightFrontMotor.set(-speed);
 		LeftBackMotor.set(speed);
 		LeftFrontMotor.set(speed);
 		Timer.delay(time);
 		Stop();
+		setInOperation(false);
 	}
 
 	public void TurnLeft(double speed, double time) {
+		setInOperation(true);
 		RightBackMotor.set(speed);
 		RightFrontMotor.set(speed);
 		LeftBackMotor.set(speed);
 		LeftFrontMotor.set(speed);
 		Timer.delay(time);
 		Stop();
+		setInOperation(false);
 	}
 
 	public void TurnRight(double speed, double time) {
+		setInOperation(true);
 		RightBackMotor.set(-speed);
 		RightFrontMotor.set(-speed);
 		LeftBackMotor.set(-speed);
 		LeftFrontMotor.set(-speed);
 		Timer.delay(time);
 		Stop();
+		setInOperation(false);
 	}
 
 	public void Stop() {
@@ -332,34 +349,6 @@ public class NO_TOUCH {
 		LeftFrontMotor.set(speed);
 	}
 
-	public void AutoGearAlign() {
-		if (playStation.ButtonCircle() == true) {
-			if (visionIsRunning == false) {
 
-				visionThread = new VisionThread(camera, new GearTargetRangerFinder(), pipeline -> {
-					if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Left) {
-						// More Power to Right Motors
-						System.out.println("It works");
-					} else if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Right) {
-						// More power to left motors
-						System.out.println("It also works");
-					}
-
-					else if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Straight) {
-						// just go str8 m8
-						System.out.println("It doesnt work... hahahaha jk it actually does");
-					}
-
-				});
-				visionThread.start();
-				visionIsRunning = true;
-			}
-
-		} else if (visionIsRunning == true) {
-			visionIsRunning = false;
-			visionThread.interrupt();
-
-		}
-	}
 
 }

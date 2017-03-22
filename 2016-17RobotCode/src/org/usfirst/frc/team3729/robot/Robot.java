@@ -13,6 +13,7 @@ import java.util.Date;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team3279.vision.GearTargetRangerFinder;
 import org.usfirst.frc.team3729.robot.Vision;
 
 import edu.wpi.cscore.CvSink;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.VisionThread;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -41,7 +43,7 @@ public class Robot extends IterativeRobot {
 	// <<<<<<< HEAD
 	Date LastPush = new Date();
 	Date now = new Date();
-	//ADXRS450_Gyro gyro;
+	// ADXRS450_Gyro gyro;
 	AnalogInput sanic;
 	// =======
 	//
@@ -54,6 +56,10 @@ public class Robot extends IterativeRobot {
 	String autoSelected;
 	boolean automove;
 	double seconds = 10.0;
+
+	UsbCamera camera;
+	VisionThread visionThread;
+
 	// //AutoMethods auto;
 	// //robotDrive drive;
 
@@ -66,20 +72,16 @@ public class Robot extends IterativeRobot {
 	// Ck ck;
 	NO_TOUCH no;
 
-	Vision gripVision = new Vision();
-
-	boolean isGarrisonStop = true;
-
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		camera = CameraServer.getInstance().startAutomaticCapture();
 		sanic = new AnalogInput(1);
 		automove = true;
-		//gyro = new ADXRS450_Gyro();
+
 		playStation = new PlayStationController(0);
 		// drive = new robotDrive(playStation);
 		// periphery = new modularPeripheries(playStation);
@@ -88,8 +90,8 @@ public class Robot extends IterativeRobot {
 		// ck = new Ck(playStation);
 		no = new NO_TOUCH(playStation, camera);
 
-//		gyro.calibrate();
-//		gyro.reset();
+		// gyro.calibrate();
+		// gyro.reset();
 
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
@@ -174,12 +176,89 @@ public class Robot extends IterativeRobot {
 			if (automove == true) {
 				no.GoForewards(.25, 3.25);
 				no.TurnRight(.8, 1.3);
-				no.GoForewards(.25, 1.7);
+
+				// no.GoForewards(.25, 1.7);
 			}
 			automove = false;
 			break;
 		}
 
+	}
+	
+	int tryForImage = 0;
+	public void AutonomousGearAlign() {
+		visionThreadOnce = true;
+		visionThread = new VisionThread(camera, new GearTargetRangerFinder(), pipeline -> {
+
+			if (pipeline.getDistance() > 6 || tryForImage < 10) {
+				tryForImage++;
+				if (pipeline.getDistance() == 0) {
+					return;
+				}
+				if (playStation.ButtonSquare() == true) {
+					if (visionThreadActive) {
+						System.out.println("Square button, stop gear align" + visionThreadActive);
+						visionThreadActive = false;
+						visionThread.interrupt();
+					}
+				}
+				if (no.isInOperation()) {
+					System.out.println("In operation do nothing");
+					return;
+				}
+				System.out.println("Vision Sees stuff. Get good son distance = " + pipeline.getDistance() );
+				if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Left) {
+					no.TurnRight(.3, .1);
+					System.out.println("It works, turn to right");
+				} else if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Right) {
+					no.TurnLeft(.3, .1);
+					System.out.println("It also works");
+				}
+
+				else if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Straight) {
+					System.out.println("It doesnt work... hahahaha jk it actually does");
+
+					if (pipeline.getDistance() > 3) {
+						System.out.println("Go forwards");
+
+						no.GoForewards(.3, .1);
+
+					}
+				}
+				tryForImage=0;
+			} else {
+				System.out.println("Vision Sees Nothing. Gonna Stahp naohw");
+				visionThreadActive = false;
+				visionThread.interrupt();
+
+			}
+
+		});
+		visionThread.start();
+		visionThreadActive = true;
+
+	}
+
+	boolean visionThreadActive = false;
+	boolean visionThreadOnce = false;
+	
+	@Override
+	public void teleopInit() {
+		// TODO Auto-generated method stub
+		super.teleopInit();
+		visionThreadOnce = false;
+		no.PnuematicsIsForward = false;
+	}
+
+	@Override
+	public void disabledPeriodic() {
+		// TODO Auto-generated method stub
+		super.disabledPeriodic();
+		if (visionThread != null) {
+			visionThreadActive = false;
+			visionThread.interrupt();
+			visionThread = null;
+		}
 	}
 
 	/**
@@ -189,7 +268,6 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		double timeBetweenPresses = 300;
 		double oversample = 50;
-	
 
 		double driver = 1;
 		if (driver == 1) {
@@ -203,13 +281,20 @@ public class Robot extends IterativeRobot {
 				}
 
 			}
+			if (playStation.ButtonSquare() == true) {
+				System.out.println("Square button, start gear align" + visionThreadActive);
+				if (!visionThreadActive && !visionThreadOnce) {
+					AutonomousGearAlign();
+				}
+			}
 			// drive.arcadeDrive();
 			// System.out.println(sanic.getAverageVoltage());
 			no.pacMan();
-			no.CkDrive();
+			if (!visionThreadActive) {
+				no.CkDrive();
+			}
 			no.rev();
 			no.CkPeripheries();
-			no.AutoGearAlign();
 
 		}
 
