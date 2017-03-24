@@ -15,18 +15,18 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
 public class NO_TOUCH {
-
+	
 	DoubleSolenoid gearActuator;
 	Relay clipMotor, brady;
 	CANTalon RightFrontMotor, LeftFrontMotor, RightBackMotor, LeftBackMotor, intakeMotor, shooterMotor1, shooterMotor2,
 			climberMotor;
 	AnalogInput gearIntake;
-
+	
 	PlayStationController playStation;
 	DriverStation driverStation;
 	// ADXRS450_Gyro gyro;
 	NetworkTable networkTable;
-	public boolean PnuematicsIsForward = true;
+	public boolean PnuematicsIsForward = false;
 	double angle = 0;
 	double front = 2;
 	double back = 2;
@@ -35,7 +35,7 @@ public class NO_TOUCH {
 	double gearSpeed = 0;
 	boolean gearUp = false;
 	boolean inOperation = false;
-	
+	boolean feed = true;
 
 	public NO_TOUCH(PlayStationController playStation, UsbCamera camera) {
 	
@@ -111,7 +111,32 @@ public class NO_TOUCH {
 	 * (gearIntake.getVoltage() < 1){ if (PnuematicsIsForward == false){
 	 * intakeMotor.set(1); } } }
 	 */
-
+	public void auto(GearTargetRangerFinder range) {
+		double right = range.rightPower;
+		System.out.println("right");
+		double left = range.leftPower;
+		System.out.println("left");
+		RightFrontMotor.set(right);
+		RightBackMotor.set(right);
+		LeftFrontMotor.set(-left);
+		LeftBackMotor.set(-left);
+	}
+	
+	public void stop(){
+		RightFrontMotor.set(0);
+		RightBackMotor.set(0);
+		LeftFrontMotor.set(0);
+		LeftBackMotor.set(0);	
+	}
+	public void autoraise(){
+		gearActuator.set(DoubleSolenoid.Value.kForward);
+		PnuematicsIsForward = true;
+	}
+	public void autodrop() {
+		intakeMotor.set(1);
+		Timer.delay(.5);
+		gearActuator.set(DoubleSolenoid.Value.kReverse);
+		PnuematicsIsForward = false;	}
 	public void rev() {
 		if (playStation.ButtonX() == true) {
 			shooterMotor1.set(-.74); // -.74 test bot value
@@ -136,14 +161,26 @@ public class NO_TOUCH {
 			climberMotor.set(0);
 		}
 		// front gear wheel
-		if (playStation.ButtonCircle() == true) {
-			if (gearIntake.getVoltage() < 1) {
-				if (PnuematicsIsForward == true && gearSpeed == 0) {
-					gearSpeed = 1;
-				} else if (PnuematicsIsForward == true && gearSpeed == 1) {
-					gearSpeed = 0;
-				}
+		if(playStation.ButtonCircle()==true && feed ==false){
+			feed=true;
+			System.out.println("true");
+		}
+		else if(playStation.ButtonCircle()==true && feed ==true){
+			feed=false;
+			System.out.println("false");
+			
+		}
+		// System.out.println(PnuematicsIsForward);
+		if (gearIntake.getAverageVoltage() < 1 ) {
+			if (PnuematicsIsForward == false && feed == true) {
+				intakeMotor.set(-1);
+			} 
+			else {
+				intakeMotor.set(0);
 			}
+		}
+		else {
+			intakeMotor.set(0);
 		}
 		// shoot sequence manual
 		if (playStation.ButtonX() == true) {
@@ -178,14 +215,7 @@ public class NO_TOUCH {
 	}
 
 	public void pacMan() {
-		// System.out.println(PnuematicsIsForward);
-		if (PnuematicsIsForward == false) {
-			if (gearIntake.getAverageVoltage() < 1) {
-				intakeMotor.set(1);
-			} else {
-				intakeMotor.set(0);
-			}
-		}
+		
 	}
 
 	
@@ -200,15 +230,15 @@ public class NO_TOUCH {
 
 	public void ToggleState() {
 		if (PnuematicsIsForward == true && gearIntake.getVoltage() > 1) {
-			intakeMotor.set(-1);
+			intakeMotor.set(1);
 			Timer.delay(.5);
-			gearActuator.set(DoubleSolenoid.Value.kForward);
+			gearActuator.set(DoubleSolenoid.Value.kReverse);
 			PnuematicsIsForward = false;
 		} else if (PnuematicsIsForward == true && gearIntake.getVoltage() < 1) {
-			gearActuator.set(DoubleSolenoid.Value.kForward);
+			gearActuator.set(DoubleSolenoid.Value.kReverse);
 			PnuematicsIsForward = false;
 		} else if (PnuematicsIsForward == false) {
-			gearActuator.set(DoubleSolenoid.Value.kReverse);
+			gearActuator.set(DoubleSolenoid.Value.kForward);
 			PnuematicsIsForward = true;
 		}
 	}

@@ -10,6 +10,11 @@ import org.opencv.imgproc.Imgproc;
 
 public class GearTargetRangerFinder extends RangeFinder {
 	GripPipeline pipeline;
+	public double V =.5;
+	public double leftPower;
+	public double rightPower;
+	public double ratio;
+	
 	
 	public GearTargetRangerFinder() {
 		super();
@@ -51,10 +56,26 @@ public class GearTargetRangerFinder extends RangeFinder {
 				}
 				int topWidth = rectangle[1].x - rectangle[0].x;
 				distance = Math.abs((targetRectagleWidthActualInches* (m_image.width()/2))/(2*topWidth*Math.tan(halfFOV)));
-
+				
 				leftHeight = Math.abs((tapeHeightActualInches* (m_image.height()/2))/(2*rectangle[0].height*Math.tan(halfFOV)));
 				rightHeight = Math.abs((tapeHeightActualInches* (m_image.height()/2))/(2*rectangle[1].height*Math.tan(halfFOV)));
 				double turnValue = leftHeight - rightHeight;
+				
+				if (leftHeight>rightHeight){
+					ratio=(rightHeight/leftHeight);
+					rightPower = V;
+					leftPower= ratio*V;
+					System.out.println("right power" + rightPower + "left power" + leftPower);
+				}
+				else if (rightHeight>leftHeight){
+					ratio=(leftHeight/rightHeight);
+					leftPower=V;
+					rightPower=ratio*V;
+					System.out.println("right power" + rightPower + "left power" + leftPower);
+				}
+				else{
+					System.out.println("HELP MEH");
+				}
 				if (Math.abs(turnValue) > turnMargin) {
 					if (turnValue > 0) {
 						this.directionToTurn = DirectionToTurn.Right;

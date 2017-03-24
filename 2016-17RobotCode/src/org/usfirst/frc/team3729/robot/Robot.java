@@ -23,8 +23,10 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -43,6 +45,8 @@ public class Robot extends IterativeRobot {
 	// <<<<<<< HEAD
 	Date LastPush = new Date();
 	Date now = new Date();
+
+	Compressor c = new Compressor(0);
 	// ADXRS450_Gyro gyro;
 	AnalogInput sanic;
 	// =======
@@ -56,7 +60,7 @@ public class Robot extends IterativeRobot {
 	String autoSelected;
 	boolean automove;
 	double seconds = 10.0;
-
+	boolean thread = false;
 	UsbCamera camera;
 	VisionThread visionThread;
 
@@ -155,11 +159,14 @@ public class Robot extends IterativeRobot {
 		// GO FOREWARD
 		case autonomousPath1:
 			if (automove == true) {
+				no.autoraise();
+				no.GoForewards(.18, 5);
+				no.autodrop();
 				// no.GoForewards(.18, 5); // perfect gear (.25,3)
 				// automove = false
 				// while (sanic.getAverageVoltage())
-				automove = false;
 			}
+				
 			break;
 		// LEFT SIDE
 		case autonomousPath2:
@@ -167,7 +174,9 @@ public class Robot extends IterativeRobot {
 
 				no.GoForewards(.25, 3.25);
 				no.TurnLeft(.8, 1.3);
-				no.GoForewards(.25, 1.7);
+				if(!visionThreadActive){
+				AutonomousGearAlign();
+				}
 
 			}
 			automove = false;
@@ -176,7 +185,9 @@ public class Robot extends IterativeRobot {
 			if (automove == true) {
 				no.GoForewards(.25, 3.25);
 				no.TurnRight(.8, 1.3);
-
+				if(!visionThreadActive){
+					AutonomousGearAlign();
+					}
 				// no.GoForewards(.25, 1.7);
 			}
 			automove = false;
@@ -188,6 +199,7 @@ public class Robot extends IterativeRobot {
 	int tryForImage = 0;
 	public void AutonomousGearAlign() {
 		visionThreadOnce = true;
+		System.out.println("I have happened once");
 		visionThread = new VisionThread(camera, new GearTargetRangerFinder(), pipeline -> {
 
 			if (pipeline.getDistance() > 6 || tryForImage < 10) {
@@ -206,29 +218,43 @@ public class Robot extends IterativeRobot {
 					System.out.println("In operation do nothing");
 					return;
 				}
+				
 				System.out.println("Vision Sees stuff. Get good son distance = " + pipeline.getDistance() );
-				if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Left) {
-					no.TurnRight(.3, .1);
-					System.out.println("It works, turn to right");
-				} else if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Right) {
-					no.TurnLeft(.3, .1);
-					System.out.println("It also works");
+				if (pipeline.getDistance() > 3) {
+					System.out.println("moving");
+					no.auto(pipeline);
 				}
-
-				else if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Straight) {
-					System.out.println("It doesnt work... hahahaha jk it actually does");
-
-					if (pipeline.getDistance() > 3) {
-						System.out.println("Go forwards");
-
-						no.GoForewards(.3, .1);
-
-					}
+				else if(pipeline.getDistance() < 3){
+					//no.autodrop();
+					System.out.println("drop!");
+					no.stop();
+					no.autodrop();
+					automove = false;
+					  
 				}
+//				if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Left) {
+//					no.TurnRight(.3, .1);
+//					System.out.println("It works, turn to right");
+//				} else if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Right) {
+//					no.TurnLeft(.3, .1);
+//					System.out.println("It also works");
+//				}
+//
+//				else if (pipeline.getDirectionToTurn() == GearTargetRangerFinder.DirectionToTurn.Straight) {
+//					System.out.println("It doesnt work... hahahaha jk it actually does");
+//
+//					if (pipeline.getDistance() > 3) {
+//						System.out.println("Go forwards");
+//
+//						no.GoForewards(.3, .1);
+//				
+//					}
+//				}
 				tryForImage=0;
 			} else {
 				System.out.println("Vision Sees Nothing. Gonna Stahp naohw");
-				visionThreadActive = false;
+				no.stop();
+				no.autodrop();
 				visionThread.interrupt();
 
 			}
@@ -269,6 +295,9 @@ public class Robot extends IterativeRobot {
 		double timeBetweenPresses = 300;
 		double oversample = 50;
 
+		//c.setClosedLoopControl(true);
+		c.start();
+		
 		double driver = 1;
 		if (driver == 1) {
 			if (playStation.ButtonTriangle() == true) {
